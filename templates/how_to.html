@@ -2,7 +2,9 @@
 
 
 {% block content %}
+{% if user.is_authenticated %}
 <p style="color:white">{{view.unanswered_challenge_invitations}}</p> 
+{% endif %}
 <div class = 'container'>
 
         <h1> How to: Fitness Challenge</h1>
