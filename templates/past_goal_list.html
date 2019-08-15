@@ -14,7 +14,6 @@
                               <th scope="col">Current Points</th>
                               <th scope="col">Start Date</th>
                               <th scope="col">End Date</th>
-                              <th scope="col">Is active?</th>
                               <th scope="col">Delete</th>
                             </tr>
                           </thead>
@@ -27,7 +26,6 @@
                               <td>{{points.current_point_total_input}}</td>
                               <td>{{points.goal_start_date}}</td>
                               <td>{{points.goal_end_date}}</td>
-                              <td> active</td>
                               <td> <a href = "{% url 'delete_goal' points.pk %}"> Delete </a> </td>
                             </tr>
                             {% endfor %}
