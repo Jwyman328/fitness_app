@@ -24,6 +24,7 @@ urlpatterns = [
     path('daily_point_date_list', views.Daily_points_date_list.as_view(), name = 'daily_monthly_points_list'),
     path('all_time_leader_board', views.All_time_leaderboard_view.as_view(), name = 'all_time_leaderboard'),
     path('how_to', views.How_to_view.as_view(), name = 'how_to'),
+    path('rules', views.Rules_view.as_view(), name = 'rules'),
 
 
 ]

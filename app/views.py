@@ -237,3 +237,14 @@ class How_to_view(TemplateView):
         if all_invitations_status_objects:
             messages.add_message(self.request, messages.INFO, 'Pending Invitation, to accept or reject go to Challenges -> Pending invitations')
 
+class Rules_view(TemplateView):
+    template_name = "rules.html"
+
+    def unanswered_challenge_invitations(self):
+
+        current_user_obj = self.request.user
+        #all_invitations = current_user_obj.Invitation.all()  # without the set
+        all_invitations_status_objects = current_user_obj.invitation_status_set.filter(status = 'idle')
+        #all_invitations = current_user_obj.invitation_to_challenge_set.all()
+        if all_invitations_status_objects:
+            messages.add_message(self.request, messages.INFO, 'Pending Invitation, to accept or reject go to Challenges -> Pending invitations')

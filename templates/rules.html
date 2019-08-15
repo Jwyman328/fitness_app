@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<p style="color:white">{{view.unanswered_challenge_invitations}}</p> 
+{% endif %}
+    <div class = 'container'>
+        <h1 style="color : red"> How to Earn Points</h1>
+        <br>
+        <h4> Clean Eating Points: Eat Clean the entire day, 10 points</h4>
+        <br>
+        <h4> Sleep Points: Hours of Sleep * 3.3</h4>
+        <br>
+        <h4> Workout Points: Workout intensity * (Workout minutes * .2) </h4>
+        <br>
+        <h4> Water Points: 100 oz of water, 10 points</h4>
+        <br>
+        <h4> Step Points: Steps * .001</h4>
+    </div>
+
+
+{% endblock %}
