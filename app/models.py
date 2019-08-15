@@ -4,16 +4,10 @@ from django.urls import reverse
 from django.utils.timezone import now
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.conf import settings
-#from django_auto_one_to_one import AutoOneToOneModel
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from users.models import My_custom_user
 from django.db.models import Sum
-
-
-# goal_date_validator 
-
-
 
 # Create your models here.
 class User_point_input_model(models.Model):
@@ -23,10 +17,8 @@ class User_point_input_model(models.Model):
     Hours_of_sleep = models.PositiveIntegerField(default = 0)
     Water_100oz = models.BooleanField(default = False)
     clean_eating = models.BooleanField(default = False)
-    workout_intensity = models.PositiveIntegerField(default = 0, validators=[MaxValueValidator(4), MinValueValidator(0)], help_text = 'input 0-4, None, light, moderate, intense, super intense') #1-4 # make it a 1-4 settings # not working 
+    workout_intensity = models.PositiveIntegerField(default = 0, validators=[MaxValueValidator(4), MinValueValidator(0)], help_text = 'input 0-4, None, light, moderate, intense, super intense') 
     workout_amount_of_time = models.PositiveIntegerField(default = 0, verbose_name = 'Workout time (in minutes)')
-    # want to add so i can do steps and fitbit connections 
-    #for now just do regular step input 
     steps = models.PositiveIntegerField(default = 0)
     
 
@@ -54,7 +46,6 @@ class User_point_input_model(models.Model):
                 
                 if self.date >= obj.goal_start_date and self.date <= obj.goal_end_date:
                     point_goal = int(obj.point_goal)
-                    #return int(point_goal)
                 else:
                     pass
             return point_goal
@@ -106,16 +97,6 @@ class User_point_input_model(models.Model):
         super(User_point_input_model, self).save(*args, **kwargs)
         if is_new:
             self.show_points() 
-        
-            
-            
-
-        """     def update(self, *args, **kwargs):
-        super(User_point_input_model, self).update(*args, **kwargs)
-        update_points() """
-
-
-
 
 
 class Point_model(models.Model):
@@ -137,8 +118,6 @@ class Point_model(models.Model):
             if self.date >= obj.goal_start_date and self.date <= obj.goal_end_date:
                 current_sum = int(obj.current_point_total_input)
                 new_current_sum = current_sum + int(self.total_points)
-                #obj.current_point_total_input = new_current_sum # add it to the goal_object
-                # maybe its a save problem, and i should update
                 my_set_obj = all_point_goals.filter(id = obj.id) # get a queryset so i can update 
                 my_set_obj.update(current_point_total_input = new_current_sum)
                 break
@@ -155,15 +134,8 @@ class Point_model(models.Model):
     
     def total_points_accumulated(self):
         '''add points created to the users total points in this users model'''
-        #current_user = My_custom_user.objects.get(id = self.user_id)
-        #current_user_total_points_ever = current_user.total_points
-        
-        # try with aggrdation
-        # get all model points for this user, then get all the dates less than this then aggregate the total_point_field then add the current amount 
-        #this_user_point_models = Point_model.objects.filter(user= self.user)
-        #all_dates_equal_to_or_less_than_this_date = this_user_point_models.filter(date__lt = self.date)
+
         this_user_point_models = Point_model.objects.filter(user= self.user).filter(date__lt = self.date).aggregate(Sum('total_points'))
-        #sum_point_totals_below_this_date = all_dates_equal_to_or_less_than_this_date.aggregate(sum('total_points'))
         if this_user_point_models['total_points__sum'] == None: # if this is the lowest date 
             self.up_to_date_total_points_accumulated = self.total_points
         else:
@@ -209,7 +181,7 @@ class Point_goals(models.Model):
     goal_accomplished = models.TextField(default = 'no', null = True, blank = True)
     points_needed_for_goal_achieved = models.PositiveIntegerField(default = 1, null = True, blank = True)
     current_point_total_input = models.PositiveIntegerField(default = 0, null = True, blank = True)
-    # {% for goal in view.goals %}{% if object.date >= goal.goal_start_date and object.date <= goal.goal_end_date  %} {{ goal.point_goal }}{% else %} 0 {% endif %} {% if not forloop.last %}, {% endif %}{% endfor %},
+
     def points_needed_to_reach_goal(self):
         #date_format = "%Y/%m/%d"
         date_time_start = self.goal_start_date
@@ -232,13 +204,10 @@ class Point_goals(models.Model):
     def add_goal_field_to_point_object(self):
         
         for obj in Point_model.objects.filter(user = self.user): # only get the point_input related to the user that set the goal 
-            if obj.date >= self.goal_start_date and obj.date <= self.goal_end_date:
-                #obj.update_or_create(daily_point_goal = self.point_goal)
-                
+            if obj.date >= self.goal_start_date and obj.date <= self.goal_end_date:                
                 updatable_point_model_filter = Point_model.objects.filter(id = obj.id)
                 updatable_point_model_filter.update(daily_point_goal = self.point_goal)
-                #obj.daily_point_goal = self.point_goal
-                #obj.save() dont save, change it to an update 
+
 
     def add_up_current_points_towards_goal(self):
         current_sum_points_in_goal_date_range = 0

@@ -11,5 +11,4 @@ class Signup_user(CreateView):
     template_name = 'signup.html'
     form_class = Custom_User_Creation_form
     success_url = '/accounts/login'
-   # fields = ['username','password1','password2', 'email']
     

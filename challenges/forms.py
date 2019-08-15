@@ -26,9 +26,7 @@ class New_challenge_invitation_form(forms.ModelForm):
     challenge_health_field_choices = [('sleep_points', 'Sleep'), ('water_points', 'Water'), ('clean_eating_points' , 
     'Clean Eating'), ('step_points', 'Steps'), ('total_points', 'Total Points'),('workout_points', 'Workout')]
     
-    #excluded_user_query()
     title =  forms.CharField()
-    #participants = forms.ManyToManyField('users.My_custom_user', related_name = 'challenge')
     start_date = forms.DateField(initial= now,  help_text = 'year-month-day')
     end_date = forms.DateField(initial= now, help_text = 'year-month-day')
     challenge_health_field = forms.ChoiceField( choices = challenge_health_field_choices, label = 'Choices')

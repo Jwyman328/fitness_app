@@ -50,7 +50,6 @@ class User_all_time_progress_graph_view(LoginRequiredMixin, ListView):
         
             model_obj_points_up_to_date = model_obj.total_points
             all_daily_points.append(model_obj_points_up_to_date)
-        print(all_daily_points)
         return all_daily_points
         
         
@@ -110,7 +109,6 @@ class Daily_points_graph_view(LoginRequiredMixin, ListView):
         
             model_obj_points_up_to_date = model_obj.total_points
             all_daily_points.append(model_obj_points_up_to_date)
-        print(all_daily_points)
         return all_daily_points
         
         

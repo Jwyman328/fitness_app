@@ -26,7 +26,6 @@ class Point_goals_form(forms.ModelForm):
             else:
                 pass
 
-        #if what_i_want != this_user:
         return goal_start_date_passed
 
 
@@ -55,5 +54,4 @@ class Health_input_form(forms.ModelForm):
             else:
                 pass
 
-        #if what_i_want != this_user:
         return date

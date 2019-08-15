@@ -31,7 +31,6 @@ class Homepage_view(LoginRequiredMixin, ListView): # make the datavisualizationp
         all_invitations_status_objects = current_user_obj.invitation_status_set.filter(status = 'idle')
         #all_invitations = current_user_obj.invitation_to_challenge_set.all()
         if all_invitations_status_objects:
-            print(all_invitations_status_objects)
             messages.add_message(self.request, messages.INFO, 'Pending Invitation, to accept or reject go to Challenges -> Pending invitations')
         
             

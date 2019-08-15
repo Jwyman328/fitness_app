@@ -21,7 +21,6 @@ from django.utils.timezone import now
 class Set_goals_view(LoginRequiredMixin, CreateView):
     template_name = 'set_goals.html'
     model = Point_goals
-    #fields = ['point_goal','goal_start_date', 'goal_end_date' ] 
     form_class = Point_goals_form
     success_url = '/goals/see_goals'
 
@@ -38,9 +37,7 @@ class Set_goals_view(LoginRequiredMixin, CreateView):
     def unanswered_challenge_invitations(self):
 
         current_user_obj = self.request.user
-        #all_invitations = current_user_obj.Invitation.all()  # without the set
         all_invitations_status_objects = current_user_obj.invitation_status_set.filter(status = 'idle')
-        #all_invitations = current_user_obj.invitation_to_challenge_set.all()
         if all_invitations_status_objects:
             messages.add_message(self.request, messages.INFO, 'Pending Invitation, to accept or reject go to Challenges -> Pending invitations')
 
@@ -78,9 +75,7 @@ class See_goals_view(LoginRequiredMixin, ListView):
     def unanswered_challenge_invitations(self):
 
         current_user_obj = self.request.user
-        #all_invitations = current_user_obj.Invitation.all()  # without the set
         all_invitations_status_objects = current_user_obj.invitation_status_set.filter(status = 'idle')
-        #all_invitations = current_user_obj.invitation_to_challenge_set.all()
         if all_invitations_status_objects:
             messages.add_message(self.request, messages.INFO, 'Pending Invitation, to accept or reject go to Challenges -> Pending invitations')
 
@@ -100,9 +95,7 @@ class Past_goals(LoginRequiredMixin, ListView):
     def unanswered_challenge_invitations(self):
 
         current_user_obj = self.request.user
-        #all_invitations = current_user_obj.Invitation.all()  # without the set
         all_invitations_status_objects = current_user_obj.invitation_status_set.filter(status = 'idle')
-        #all_invitations = current_user_obj.invitation_to_challenge_set.all()
         if all_invitations_status_objects:
             messages.add_message(self.request, messages.INFO, 'Pending Invitation, to accept or reject go to Challenges -> Pending invitations')
 
@@ -123,12 +116,9 @@ class Delete_goal(LoginRequiredMixin, DeleteView):
     def unanswered_challenge_invitations(self):
 
         current_user_obj = self.request.user
-        #all_invitations = current_user_obj.Invitation.all()  # without the set
         all_invitations_status_objects = current_user_obj.invitation_status_set.filter(status = 'idle')
-        #all_invitations = current_user_obj.invitation_to_challenge_set.all()
         if all_invitations_status_objects:
             messages.add_message(self.request, messages.INFO, 'Pending Invitation, to accept or reject go to Challenges -> Pending invitations')
 
-    #queryset = Point_goals.objects.filter(user = self.request.user)
 
     
