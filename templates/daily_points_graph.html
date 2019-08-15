@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<p style="color:white">{{view.unanswered_challenge_invitations}}</p> 
+<head>
+        <meta charset="utf-8">
+        <title>Django Highcharts Example</title>
+</head>
+<body>
+        <div id="container"></div>
+        <script src="https://code.highcharts.com/highcharts.src.js"></script>
+        <script>
+          Highcharts.chart('container', {
+              chart: {
+                  type: 'line'
+              },
+              title: {
+                  text: 'Daily Points' 
+              },
+              xAxis: {
+                  categories:  [
+                  {% for entry in view.date_data %}'{{ entry }}'{% if not forloop.last %}, {% endif %}{% endfor %}
+
+                   ]  
+              },
+              series: [{
+                  name: 'Daily Points',
+                  data: [
+                  {% for entry in view.user_daily_points %}{{entry}}{% if not forloop.last %}, {% endif %}{% endfor %}
+
+                  ],
+                  color: 'red'
+              }
+              ]
+          });
+        </script>
+
+
+    </body>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<p style="color:white">{{view.unanswered_challenge_invitations}}</p> 
+<div class = 'container'>
+        <h1> Daily Point Data</h1>
+        <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Date</th>
+                    <th scope="col">Total </th>
+                    <th scope="col">Goal</th>
+                    <th scope="col">Workout</th>
+                    <th scope="col">Sleep </th>
+                    <th scope="col">Water</th>
+                    <th scope="col">Step</th>
+                    <th scope="col">Clean Eating</th>
+                    <th scope="col">Update</th>
+                    <th scope="col">See graph</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for point_obj in view.order_date_data %}
+                  <tr>
+                    <th scope="row">{{point_obj.date}}</th>
+                    <td>{{point_obj.total_points}}</td>
+                    <td>{{point_obj.daily_point_goal}}</td>
+                    <td>{{point_obj.workout_points}}</td>
+                    <td>{{point_obj.sleep_points}}</td>
+                    <td>{{point_obj.water_points}}</td>
+                    <td>{{point_obj.step_points}}</td>
+                    <td>{{point_obj.clean_eating_points}}</td>
+                    <td><a href = "{%url 'update_health_data_input' point_obj.pk %}"> Update</a></td>
+                    <td><a href = "{%url 'daily_point_graph' point_obj.pk %}"> See graph</a></td>
+                  </tr>
+                 {% endfor %}
+                </tbody>
+        </table>
+
+
+
+    
+</div>
+
+{% endblock %}

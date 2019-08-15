@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+ <p style="color:white">{{view.unanswered_challenge_invitations}}</p> 
+
+ <div class = 'container'>
+        <h1> Pending Challenge Invitations </h1>
+        
+        <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Title</th>
+                    <th scope="col">Start Date</th>
+                    <th scope="col">End Date</th>
+                    <th scope="col"> Challenge Category</th>
+                    <th scope="col">invited by </th>
+                    <th scope="col">Accept/Reject</th>
+
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for invitation_obj in view.unanswered_challenge_invitations_returned %}
+                  <tr>
+                    <th scope="row">{{invitation_obj.invitation.title}}</th>
+                    <td>{{invitation_obj.invitation.start_date}}</td>
+                    <td>{{invitation_obj.invitation.end_date}}</td> 
+                    <td>{{invitation_obj.invitation.challenge_health_field}}</td> 
+                    <td>{{invitation_obj.invitation.username_of_invitor}}</td> <!-- modify this to show username -->
+                    <td><a href = "{% url 'update_invitation_status' invitation_obj.pk %}"> Accept or reject</a></td>
+                  </tr>
+                 {% endfor %}
+                </tbody>
+        </table>
+
+
+
+    
+</div>
+
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<p style="color:white">{{view.unanswered_challenge_invitations}}</p> 
+<div class = 'container'>
+        <!-- past challenges -->
+        <h2> Past Challenges</h2>
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">End Date</th>
+                <th scope="col">Start Date</th>
+                <th scope="col">Title</th>
+                <th scope="col"> Challenge Category</th>
+                <th scope="col">Created by </th>
+                <th scope="col"> Leader Board</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for invitation_obj in view.past_challenge_data %}
+              <tr>
+                <th scope="row">{{invitation_obj.invitation.end_date}}</th>
+                <td>{{invitation_obj.invitation.start_date}}</td> 
+                <td>{{invitation_obj.invitation.title}}</td>
+                <td>{{invitation_obj.invitation.challenge_health_field}}</td> 
+                <td>{{invitation_obj.invitation.username_of_invitor}}</td> <!-- modify this to show username -->
+                <td><a href = "{% url 'Challenge_leaderboard' invitation_obj.invitation_id  %}"> LeaderBoard</a></td>
+              </tr>
+             {% endfor %}
+            </tbody>
+    </table>
+
+
+    
+</div>
+
+{% endblock %}

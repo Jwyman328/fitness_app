@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load crispy_forms_field %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+{% if object.user == user %}
+<p style="color:white">{{view.unanswered_challenge_invitations}}</p> 
+<div class = 'container'>
+        <div class = 'row'>
+            <div class = col>
+                    <form method = 'post'> {% csrf_token %}
+                            <h3> Are you sure you want to delete this goal of 
+                                    {{object.point_goal}} points, 
+                                    <br>Startdate: {{object.goal_start_date}}
+                                    , Enddate: {{object.goal_end_date}} ?</h3>
+                           
+                           <input class = 'btn btn-danger' type='submit' value = 'Delete'> 
+                    </form> 
+            </div>
+
+        </div>
+    </div>
+{% else %}
+<h3> Error </h3>
+{% endif %}
+{% endblock %}

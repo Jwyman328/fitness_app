@@ -1,0 +1,114 @@
+
+{% extends 'base.html' %}
+<!-- display each individual days points recap in a bar graph -->
+
+{% block content %}
+
+{% if object.user.username == user.username %} <!-- only allow users to view their own data --> 
+<p style="color:white">{{view.unanswered_challenge_invitations}}</p> 
+
+
+<head>
+  <meta charset="utf-8">
+  <title>Django Highcharts Example</title>
+</head>
+<body>
+    <div class = 'container'>
+            <h1> Daily Health Data  </h1>
+    </div>
+        
+  <div id="container"></div>
+  
+  <script src="https://code.highcharts.com/highcharts.src.js"></script>
+  <script>
+      
+    Highcharts.chart('container', {
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: '{{object.date }}' 
+        },
+        xAxis: {
+            categories:  ['{{object.one_to_one_workout}}' , '{{object.total_points}}' , '{{object.sleep_points}}','{{object.water_points}}','{{object.workout_points}}',
+            '{{object.clean_eating_points}}','{{object.object.step_points}}'],  
+
+        },
+        yAxis: {
+            plotLines: [{
+                color: 'red', // Color value
+                dashStyle: 'longdashdot', // Style of the plot line. Default to solid
+                value: {% if object.daily_point_goal %} {{object.daily_point_goal}} {% else %} 0{% endif %}  ,// Value of where the line will appear
+                width: 2, // Width of the line   ,
+                zIndex: 3
+
+
+            }]
+        },
+        series: [{
+            name: 'Total',
+            data: [
+                {{ object.total_points }}
+            ],
+            color: 'black'
+        }, {
+            name: 'Sleep ',
+            data: [
+                {{ object.sleep_points }}
+            ],
+            color: 'green'
+        }, 
+          
+            {
+            name: 'Water',
+            data: [
+                {{ object.water_points }}
+
+            ],
+            color: 'blue'
+        },           
+            {
+            name: 'Clean Eating',
+            data: [
+                {{ object.clean_eating_points }}
+
+            ],
+            color: 'orange'
+        },
+
+            {
+            name: 'Steps',
+            data: [
+                {{ object.step_points }}
+
+            ],
+            color: 'Purple'
+        },    
+        {
+            name: 'Workout',
+            data: [
+                {{ object.workout_points }}
+            ],
+            color: 'red'
+        },
+       ]
+    });
+  </script>
+
+<div class = 'container'>
+        <div class = 'col mr-auto ml-auto'>
+                <button type="button" class="btn btn-link"><a href = "{% url 'update_health_data_input' object.pk %}"> Update Health Data  </a> </button>
+            
+        </div>
+    </div> 
+
+
+
+</body>
+{% else %}
+ <p> Error</p>
+{% endif %}
+
+
+
+{% endblock %}

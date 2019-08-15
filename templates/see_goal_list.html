@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<p style="color:white">{{view.unanswered_challenge_invitations}}</p> 
+<div class = 'container'>
+<table class="table table-hover">
+  <h1> Current Goals </h1>
+        <thead>
+          <tr>
+            <th scope="col">Total Point Goal</th>
+            <th scope="col">Daily Point Goal</th>
+            <th scope="col">Current Points</th>
+            <th scope="col">Start Date</th>
+            <th scope="col">End Date</th>
+            <th scope="col">Is active?</th>
+            <th scope="col">Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for points in view.goals %}
+           
+          <tr>
+            <th scope="row">{{points.points_needed_for_goal_achieved}}</th>
+            <td>{{points.point_goal}}</td>
+            <td>{{points.current_point_total_input}}</td>
+            <td>{{points.goal_start_date}}</td>
+            <td>{{points.goal_end_date}}</td>
+            <td> active</td>
+            <td> <a href = "{% url 'delete_goal' points.pk %}"> Delete </a> </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <!-- future goals  -->
+      <table class="table table-hover">
+          <h1> Future Goals </h1>
+                <thead>
+                    
+                  <tr>
+                    <th scope="col">Total Point Goal</th>
+                    <th scope="col">Daily Point Goal</th>
+                    <th scope="col">Current Points</th>
+                    <th scope="col">Start Date</th>
+                    <th scope="col">End Date</th>
+                    <th scope="col">Is active?</th>
+                    <th scope="col">Delete</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for points in view.future_goals %}
+                   
+                  <tr>
+                    <th scope="row">{{points.points_needed_for_goal_achieved}}</th>
+                    <td>{{points.point_goal}}</td>
+                    <td>{{points.current_point_total_input}}</td>
+                    <td>{{points.goal_start_date}}</td>
+                    <td>{{points.goal_end_date}}</td>
+                    <td> active</td>
+                    <td> <a href = "{% url 'delete_goal' points.pk %}"> Delete </a> </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+
+
+</div>
+
+
+
+{% endblock %}

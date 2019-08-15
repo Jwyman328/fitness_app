@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<head>
+        <meta charset="utf-8">
+        <title>Django Highcharts Example</title>
+</head>
+<body>
+        <div id="container"></div>
+        <script src="https://code.highcharts.com/highcharts.src.js"></script>
+        <script>
+          Highcharts.chart('container', {
+              chart: {
+                  type: 'line'
+              },
+              title: {
+                  text: 'september Points' 
+              },
+              xAxis: {
+                  categories:  [
+                  {% for entry in september_data %}'{{ entry.date }}'{% if not forloop.last %}, {% endif %}{% endfor %}
+
+                   ]  
+              },
+              series: [{
+                  name: 'Daily Total',
+                  data: [
+                    {% for entry in september_data %}{{ entry.total_points }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                  ],
+                  color: 'black'
+              }, {
+                  name: 'Sleep ',
+                  data: [
+                  {% for entry in september_data %}{{ entry.sleep_points }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                  ],
+                  color: 'green'
+              }, 
+                
+                  {
+                  name: 'Water',
+                  data: [
+                  {% for entry in september_data %}{{ entry.water_points }}{% if not forloop.last %}, {% endif %}{% endfor %}
+      
+                  ],
+                  color: 'blue'
+              },           
+                  {
+                  name: 'Clean Eating',
+                  data: [
+                  {% for entry in september_data %}{{ entry.clean_eating_points }}{% if not forloop.last %}, {% endif %}{% endfor %}
+      
+                  ],
+                  color: 'orange'
+              },
+      
+                  {
+                  name: 'Steps',
+                  data: [
+                  {% for entry in september_data %}{{ entry.step_points }}{% if not forloop.last %}, {% endif %}{% endfor %}
+      
+                  ],
+                  color: 'Purple'
+              },
+      
+      
+              
+              
+              {
+                  name: 'Workout',
+                  data: [
+                    {% for entry in september_data %}{{ entry.workout_points }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                  ],
+                  color: 'red'
+              }]
+          });
+        </script>
+</body>
+{% endblock %}
+

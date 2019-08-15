@@ -1,0 +1,16 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+gunicorn = "*"
+django-auto-one-to-one = "*"
+django-bootstrap4 = "*"
+django-crispy-forms = "*"
+django = "*"
+
+[requires]
+python_version = "3.7"

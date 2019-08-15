@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<p style="color:white">{{view.unanswered_challenge_invitations}}</p> 
+
+    <h1> Home</h1>
+
+    <p> Have you input your health data for today? <a href="{% url 'Health_data_input' %}"> Input </a> </p>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_field %}
+{% load crispy_forms_tags %}
+
+
+
+{% block content %}
+<p style="color:white">{{view.unanswered_challenge_invitations}}</p> 
+
+<div class = 'container'>
+        <div class = 'row'>
+            <div class = col>
+                    <h1>Create Challenge </h1>
+                    <form method = 'post'> {% csrf_token %}
+                            {{form| crispy}}
+                           
+                           <input class = 'btn btn-success' type='submit' value = 'Submit'> 
+                    </form> 
+            </div>
+
+        </div>
+    </div>
+
+{% endblock %}

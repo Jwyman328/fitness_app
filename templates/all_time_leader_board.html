@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<p style="color:white">{{view.unanswered_challenge_invitations}}</p> 
+
+<div class = 'container'>
+        <h1>Leader Board</h1>
+        <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Total Points </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for user_obj in view.all_time_point_leaders_in_order %}
+                  <tr>
+                    <th scope="row">{{user_obj.username}}</th>
+                    <td>{{user_obj.total_points}}</td>
+                  </tr>
+                 {% endfor %}
+                </tbody>
+        </table>
+
+
+
+    
+</div>
+
+{% endblock %}
+
+
