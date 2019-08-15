@@ -29,7 +29,7 @@ class Challenge(models.Model): # make uppercase
 
 class Invitation_to_challenge(models.Model):
     challenge_health_field_choices = [('sleep_points', 'Sleep'), ('water_points', 'Water'), ('clean_eating_points' , 
-    'Clean Eating'), ('steps', 'Steps'), ('total_points', 'Total Points'),('workout_points', 'Workout')]
+    'Clean Eating'), ('step_points', 'Steps'), ('total_points', 'Total Points'),('workout_points', 'Workout')]
 
     start_date = models.DateField(default= now, editable=True, help_text = 'year-month-day')
     end_date = models.DateField(default= now, editable=True, help_text = 'year-month-day')
