@@ -59,7 +59,6 @@ class Health_data_input(LoginRequiredMixin, CreateView):
     template_name = 'health_data_input_form.html'
     model = User_point_input_model
     form_class = Health_input_form
-    #fields = ['date', 'Hours_of_sleep','Water_100oz', 'clean_eating', 'workout_intensity', 'workout_amount_of_time', 'steps']
     
     def get_form_kwargs(self):
         kwargs = super(Health_data_input, self).get_form_kwargs()
@@ -77,9 +76,7 @@ class Health_data_input(LoginRequiredMixin, CreateView):
     def unanswered_challenge_invitations(self):
 
         current_user_obj = self.request.user
-        #all_invitations = current_user_obj.Invitation.all()  # without the set
         all_invitations_status_objects = current_user_obj.invitation_status_set.filter(status = 'idle')
-        #all_invitations = current_user_obj.invitation_to_challenge_set.all()
         if all_invitations_status_objects:
             messages.add_message(self.request, messages.INFO, 'Pending Invitation, to accept or reject go to Challenges -> Pending invitations')
 
@@ -89,7 +86,8 @@ class Health_data_input(LoginRequiredMixin, CreateView):
 class Update_health_data_input(LoginRequiredMixin, UpdateView):
     template_name = 'update_daily_data_input.html'
     model = User_point_input_model
-    fields = ['date', 'Hours_of_sleep','Water_100oz', 'clean_eating', 'workout_intensity', 'workout_amount_of_time', 'steps']
+    fields = ['date', 'Hours_of_sleep','Water_100oz', 'clean_eating', 
+              'workout_intensity', 'workout_amount_of_time', 'steps']
     
 
     def form_valid(self, form):

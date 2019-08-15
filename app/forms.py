@@ -39,7 +39,9 @@ class Health_input_form(forms.ModelForm):
 
     class Meta:
         model = User_point_input_model
-        fields = ['date', 'Hours_of_sleep','Water_100oz', 'clean_eating', 'workout_intensity', 'workout_amount_of_time', 'steps']
+        fields = ['date', 'Hours_of_sleep','Water_100oz',
+                  'clean_eating', 'workout_intensity', 
+                  'workout_amount_of_time', 'steps']
 
     
     def clean_date(self):

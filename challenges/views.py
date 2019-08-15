@@ -67,9 +67,7 @@ class Accept_deny_challenge_view(LoginRequiredMixin, ListView):
     def unanswered_challenge_invitations(self):
 
         current_user_obj = self.request.user
-        #all_invitations = current_user_obj.Invitation.all()  # without the set
         all_invitations_status_objects = current_user_obj.invitation_status_set.filter(status = 'idle')
-        #all_invitations = current_user_obj.invitation_to_challenge_set.all()
         if all_invitations_status_objects:
             messages.add_message(self.request, messages.INFO, 'Pending Invitation, to accept or reject go to Challenges -> Pending invitations')
         
@@ -113,7 +111,7 @@ class Accepted_challenges_view(LoginRequiredMixin, ListView):
     template_name = 'Accepted_challenges_list.html'
     model = Invitation_to_challenge
     
-      def accepted_challenge_invitations(self):
+    def accepted_challenge_invitations(self):
         # get all the invitations that relate to this user
         # get all the challenges that this user is in
         # then only get the invitations that are not related to the challenges he is in
@@ -160,9 +158,7 @@ class Accepted_challenges_view(LoginRequiredMixin, ListView):
     def unanswered_challenge_invitations(self):
 
         current_user_obj = self.request.user
-        #all_invitations = current_user_obj.Invitation.all()  # without the set
         all_invitations_status_objects = current_user_obj.invitation_status_set.filter(status = 'idle')
-        #all_invitations = current_user_obj.invitation_to_challenge_set.all()
         if all_invitations_status_objects:
             messages.add_message(self.request, messages.INFO, 'Pending Invitation, to accept or reject go to Challenges -> Pending invitations')
 
@@ -185,9 +181,7 @@ class Past_accepted_challenges(LoginRequiredMixin, ListView):
     def unanswered_challenge_invitations(self):
 
         current_user_obj = self.request.user
-        #all_invitations = current_user_obj.Invitation.all()  # without the set
         all_invitations_status_objects = current_user_obj.invitation_status_set.filter(status = 'idle')
-        #all_invitations = current_user_obj.invitation_to_challenge_set.all()
         if all_invitations_status_objects:
             messages.add_message(self.request, messages.INFO, 'Pending Invitation, to accept or reject go to Challenges -> Pending invitations')
 
@@ -211,6 +205,7 @@ class Challenge_leaderboard(LoginRequiredMixin, DetailView):
             username_total[participant_username] = participant_total
         
         # order the dictionary based off total
+        #username_total = sorted(username_total)
         sorted_dict = sorted(username_total.items(), key=operator.itemgetter(1), reverse=True)
         
         return(sorted_dict)

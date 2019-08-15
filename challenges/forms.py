@@ -23,8 +23,9 @@ class New_challenge_invitation_form(forms.ModelForm):
             # how to override the field 
 
 
-    challenge_health_field_choices = [('sleep_points', 'Sleep'), ('water_points', 'Water'), ('clean_eating_points' , 
-    'Clean Eating'), ('step_points', 'Steps'), ('total_points', 'Total Points'),('workout_points', 'Workout')]
+    challenge_health_field_choices = [('sleep_points', 'Sleep'), ('water_points', 'Water'), 
+                                      ('clean_eating_points' ,'Clean Eating'), ('step_points', 'Steps'),
+                                      ('total_points', 'Total Points'),('workout_points', 'Workout')]
     
     title =  forms.CharField()
     start_date = forms.DateField(initial= now,  help_text = 'year-month-day')
