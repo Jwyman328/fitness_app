@@ -18,7 +18,7 @@ from django.urls import path  , include
 from . import views
 
 urlpatterns = [
-    path('', views.Homepage_view.as_view(), name = 'home'),
+    path('', views.How_to_view.as_view(), name = 'home'),
     path('add_health_data', views.Health_data_input.as_view(), name = 'Health_data_input'),
     path('daily_input_update/<int:pk>/',views.Update_health_data_input.as_view(), name = 'update_health_data_input'),
     path('daily_point_date_list', views.Daily_points_date_list.as_view(), name = 'daily_monthly_points_list'),
