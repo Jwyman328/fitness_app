@@ -15,10 +15,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+
 from . import views 
 
 urlpatterns = [
-    path('daily_point_graph/<int:pk>/', views.Daily_point_recap_view.as_view(), name = 'daily_point_graph'), 
-    path('User_all_time_progress_graph',views.User_all_time_progress_graph_view.as_view(), name = 'User_all_time_progress_graph'),
-    path('daily_points_graph', views.Daily_points_graph_view.as_view(), name = 'daily_points_graph'),
+    path('daily_point_graph/<int:pk>/',
+        views.Daily_point_recap_view.as_view(),
+        name='daily_point_graph'), 
+    path('User_all_time_progress_graph',
+        views.User_all_time_progress_graph_view.as_view(),
+        name='User_all_time_progress_graph'),
+    path('daily_points_graph',
+        views.Daily_points_graph_view.as_view(),
+        name='daily_points_graph'),
 ]

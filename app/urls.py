@@ -14,17 +14,28 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path  , include
+from django.urls import path, include
+
 from . import views
 
 urlpatterns = [
-    path('', views.How_to_view.as_view(), name = 'home'),
-    path('add_health_data', views.Health_data_input.as_view(), name = 'Health_data_input'),
-    path('daily_input_update/<int:pk>/',views.Update_health_data_input.as_view(), name = 'update_health_data_input'),
-    path('daily_point_date_list', views.Daily_points_date_list.as_view(), name = 'daily_monthly_points_list'),
-    path('all_time_leader_board', views.All_time_leaderboard_view.as_view(), name = 'all_time_leaderboard'),
-    path('how_to', views.How_to_view.as_view(), name = 'how_to'),
-    path('rules', views.Rules_view.as_view(), name = 'rules'),
-
-
+    path('', views.How_to_view.as_view(), name='home'),
+    path(
+        'add_health_data', 
+         views.Health_data_input.as_view(),
+         name='Health_data_input'),
+    path(
+        'daily_input_update/<int:pk>/',
+        views.Update_health_data_input.as_view(),
+         name='update_health_data_input'),
+    path(
+        'daily_point_date_list',
+         views.Daily_points_date_list.as_view(),
+         name='daily_monthly_points_list'),
+    path('all_time_leader_board', 
+        views.All_time_leaderboard_view.as_view(),
+         name='all_time_leaderboard'),
+         
+    path('how_to', views.How_to_view.as_view(), name='how_to'),
+    path('rules', views.Rules_view.as_view(), name='rules'),
 ]

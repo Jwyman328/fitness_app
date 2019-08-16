@@ -14,13 +14,13 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path  , include
+from django.urls import path, include
+
 from . import views
 
 urlpatterns = [
-    path('set_goals',views.Set_goals_view.as_view(), name = 'set_goal'),
-    path('see_goals', views.See_goals_view.as_view(), name = 'see_goals'),
-    path('past_goals', views.Past_goals.as_view(), name = 'past_goals'),
-    path('delete_goal/<int:pk>/', views.Delete_goal.as_view(), name = 'delete_goal'),
-
+    path('set_goals',views.Set_goals_view.as_view(), name='set_goal'),
+    path('see_goals', views.See_goals_view.as_view(), name='see_goals'),
+    path('past_goals', views.Past_goals.as_view(), name='past_goals'),
+    path('delete_goal/<int:pk>/', views.Delete_goal.as_view(), name='delete_goal'),
 ]

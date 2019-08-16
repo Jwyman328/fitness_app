@@ -14,15 +14,27 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path  , include
+from django.urls import path, include
+
 from . import views
 
 urlpatterns = [
-    path('new_challenge', views.Create_a_challenge_view.as_view(), name = 'create_a_challenge'),
-    path('pending_invitations', views.Accept_deny_challenge_view.as_view(), name = 'invitations_pending'),
-    path('update_invitation_status/<int:pk>/',views.Update_invitation_status.as_view(), name = 'update_invitation_status'),
-    path('Accepted_challenges_list',views.Accepted_challenges_view.as_view(), name = 'accepted_challenges_list' ),
-    path('past_accepted_challenges',views.Past_accepted_challenges.as_view(), name = 'past_accepted_challenges' ),
-    path('challenge_leaderboard/<int:pk>/', views.Challenge_leaderboard.as_view(), name = 'Challenge_leaderboard'),
-
+    path('new_challenge', 
+          views.Create_a_challenge_view.as_view(),
+          name='create_a_challenge'),
+    path('pending_invitations',
+          views.Accept_deny_challenge_view.as_view(),
+          name='invitations_pending'),
+    path('update_invitation_status/<int:pk>/',
+          views.Update_invitation_status.as_view(),
+          name='update_invitation_status'),
+    path('Accepted_challenges_list',
+          views.Accepted_challenges_view.as_view(),
+          name='accepted_challenges_list' ),
+    path('past_accepted_challenges',
+          views.Past_accepted_challenges.as_view(),
+          name='past_accepted_challenges' ),
+    path('challenge_leaderboard/<int:pk>/',
+          views.Challenge_leaderboard.as_view(),
+          name='Challenge_leaderboard'),
 ]
