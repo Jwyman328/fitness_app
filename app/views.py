@@ -25,7 +25,6 @@ class Homepage_view(LoginRequiredMixin, ListView):
     # check if there are any pending messages 
     def unanswered_challenge_invitations(self):
         """Check for challenge invitations, if found, create and send a message."""
-
         current_user_obj = self.request.user
         all_invitations_status_objects = (
             current_user_obj.invitation_status_set.filter(status = 'idle'))
@@ -273,7 +272,7 @@ class How_to_view(TemplateView):
 
 
 class Rules_view(TemplateView):
-    """A page showing the scoring rules for converting health data input into points """
+    """A page showing the scoring rules for converting health data input into points."""
     template_name = "rules.html"
 
     def unanswered_challenge_invitations(self):

@@ -17,6 +17,8 @@ class New_challenge_invitation_form(forms.ModelForm):
         challenge_health_field(str): a single health field data choosen from the challenge_health_field_options
     
      """
+
+     
     class Meta:
         model = Invitation_to_challenge
         fields = ['title', 'start_date','end_date','challenge_health_field', 'invitees']  
