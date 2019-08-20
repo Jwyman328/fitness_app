@@ -17,7 +17,7 @@ from users.models import My_custom_user
 
 
 class Homepage_view(LoginRequiredMixin, ListView):
-    """Show a simple homepage """
+    """A Simple homepage."""
      # make the datavisualizationpage a Detail view and generate a page for every point object
     template_name = 'home.html'
     queryset = User_point_input_model.objects.all()
@@ -36,19 +36,18 @@ class Homepage_view(LoginRequiredMixin, ListView):
         
             
 class Daily_points_date_list(LoginRequiredMixin, ListView):
+    """List of users health data points."""
     template_name = 'daily_points_date_list.html'
     model = Point_model
 
     def order_date_data(self):
         """Order and return point data by date, newest to oldest."""
-
         ordered_user_data = Point_model.objects.filter(user=self.request.user)
         order_date_data = ordered_user_data.order_by('-date')
         return order_date_data
 
     def unanswered_challenge_invitations(self):
         """Check for challenge invitations,if found, create and send a message"""
-
         current_user_obj = self.request.user
         all_invitations_status_objects = current_user_obj.invitation_status_set.filter(status='idle')
         if all_invitations_status_objects:
@@ -58,6 +57,7 @@ class Daily_points_date_list(LoginRequiredMixin, ListView):
 
             
 class Health_data_input(LoginRequiredMixin, CreateView):
+    """A form allowing the user to create a Health data and corresponding point object."""
     template_name = 'health_data_input_form.html'
     model = User_point_input_model
     form_class = Health_input_form
@@ -97,6 +97,11 @@ class Health_data_input(LoginRequiredMixin, CreateView):
 
             
 class Update_health_data_input(LoginRequiredMixin, UpdateView):
+    """A update form allowing the user to change any Health data input, one at a time.
+    
+    As well, the corresponding point and goal objects will be updated as well.
+
+    """
     template_name = 'update_daily_data_input.html'
     model = User_point_input_model
     fields = ['date', 'Hours_of_sleep','Water_100oz', 'clean_eating', 
@@ -105,27 +110,35 @@ class Update_health_data_input(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
 
         def update_points():
-            """Update this health input object's corresponding point object
+            """ Update this health input object's corresponding point object
             
             recalculate all of the this update forms input in point form,
             and then input it into the corresponding point object.
             Update the total points acumulated for each user object
+
              """
 
             def water_clean_eating_point_func(water_or_clean_eating_true_false):
-                ''' if the input is true, give a ten'''
+                """ if the input is true, return 10
+                
+                Args: 
+                water_or_clean_eating_true_false (boolean): True false, if the user 
+                ate clean or drank 100oz of water.
+
+                return: int:10 if param true
+
+                """
                 if water_or_clean_eating_true_false == 1:
                     return 10.0
                 else:
                     return 0.0 
             
             def point_goal_for_this_date():
-                ''' return the point goal that applies to this date '''
+                """ Return the point goal that applies to this health input object's date. """
                 point_goal = 0
-                all_point_goals = Point_goals.objects.filter(user=self.request.user)
+                all_point_goals = Point_goals.objects.filter(user=self.request.user) #current users point objects
                 for obj in all_point_goals: 
-                    # only get the point_input related to the user that set the goal 
-                    if form.instance.date >= obj.goal_start_date and form.instance.date <= obj.goal_end_date:
+                    if form.instance.date >= obj.goal_start_date and form.instance.date <= obj.goal_end_date: 
                         
                         point_goal = int(obj.point_goal)
                         #return int(point_goal)
@@ -146,9 +159,10 @@ class Update_health_data_input(LoginRequiredMixin, UpdateView):
             
 
             def update_user_sum_total_points():
+                """ Update user's total points inside the user obj. """
                 # before th model is update i need to acess the older data 
-                current_user_updateable_version = My_custom_user.objects.filter(id=self.request.user.id) # filter for the current user 
-                current_user = My_custom_user.objects.get(id=self.request.user.id)
+                current_user_updateable_version = My_custom_user.objects.filter(id=self.request.user.id) # filter for the current user in updateable query format
+                current_user = My_custom_user.objects.get(id=self.request.user.id) 
                 current_model_in_point_version = Point_model.objects.get(id=self.object.id)
                 
                 current_point_sum = current_user.total_points # former total points for the user
@@ -188,6 +202,7 @@ class Update_health_data_input(LoginRequiredMixin, UpdateView):
             update_total_points_accumulated_for_all() # do it after the model is updated
 
             def reset_goal_current_point_total():
+                """Update goal object's current point total related to this input health object."""
                 # just recall the goal_model counter
                 all_point_goals = Point_goals.objects.filter(user=self.request.user)
                 for obj in all_point_goals: # only get the point_input related to the user that set the goal 
@@ -202,6 +217,7 @@ class Update_health_data_input(LoginRequiredMixin, UpdateView):
         # see if i can grab the data here 
 
     def get_success_url(self):
+        """Get the health input model's pk and return the user to the corresponding point model graph url. """
         pk_value = int(self.object.pk)  # there is a current difference of 16 between the User_point_input_model and Point Model pks
         return reverse('daily_point_graph', kwargs={'pk' : pk_value}) # this object pk will mimic the Point_model pk, they should always be equal, if not, this fails 
 
@@ -218,12 +234,13 @@ class Update_health_data_input(LoginRequiredMixin, UpdateView):
 
             
 class All_time_leaderboard_view(LoginRequiredMixin, ListView):
-    # i want all the points
+    """A page showing all the users and their total points acumulated, ordered highest to lowest."""
     template_name = 'all_time_leader_board.html'
     model = Point_model
 
     # order the leaders based off of all time points 
     def all_time_point_leaders_in_order(self):
+        """Order and return a queryset of users, by point total, highest to lowest. """
         most_points_order = My_custom_user.objects.order_by('-total_points')
         return most_points_order
 
@@ -240,6 +257,7 @@ class All_time_leaderboard_view(LoginRequiredMixin, ListView):
 
             
 class How_to_view(TemplateView):
+    """A simple tutorial page, showing the viewer the function of the entire website."""
     template_name = "how_to.html"
 
     def unanswered_challenge_invitations(self):
@@ -255,6 +273,7 @@ class How_to_view(TemplateView):
 
 
 class Rules_view(TemplateView):
+    """A page showing the scoring rules for converting health data input into points """
     template_name = "rules.html"
 
     def unanswered_challenge_invitations(self):

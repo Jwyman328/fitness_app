@@ -8,6 +8,7 @@ from .models import Point_goals, User_point_input_model
 class Point_goals_form(forms.ModelForm):
     
     def __init__(self, *args, **kwargs):
+        """Get current user."""
         self.user = kwargs.pop('user')  
         # To get request.user. Do not use kwargs.pop('user', None) due to potential security hole
         super(Point_goals_form, self).__init__(*args, **kwargs)
@@ -17,11 +18,14 @@ class Point_goals_form(forms.ModelForm):
         fields = ['point_goal','goal_start_date','goal_end_date']  
     
     def clean_goal_start_date(self):
-        "validate here"
+        """Validate that the start date input does not already exist.
+        
+        If it exists, return an error message.
+
+        """
         goal_start_date_passed = self.cleaned_data.get('goal_start_date')
         this_user = self.user
-        what_i_want = 'today'
-
+        
         for obj in Point_goals.objects.filter(user = this_user):
             if (goal_start_date_passed >= obj.goal_start_date and
                     goal_start_date_passed <= obj.goal_end_date): # if the start date is inside preexisting goal
@@ -32,11 +36,11 @@ class Point_goals_form(forms.ModelForm):
 
 
 class Health_input_form(forms.ModelForm):
-    
+    """Get the current user."""
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user')  # To get request.user. Do not use kwargs.pop('user', None) due to potential security hole
-
         super(Health_input_form, self).__init__(*args, **kwargs)
+
 
     class Meta:
         model = User_point_input_model
@@ -44,8 +48,13 @@ class Health_input_form(forms.ModelForm):
                   'clean_eating', 'workout_intensity', 
                   'workout_amount_of_time', 'steps']
 
+
     def clean_date(self):
-        "validate here"
+        """Validate that the start date input does not already exist.
+        
+        If it exists, return an error message.
+
+        """
         date = self.cleaned_data.get('date')
         this_user = self.user
 

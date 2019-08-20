@@ -18,6 +18,7 @@ from users.models import My_custom_user
 
 
 class Set_goals_view(LoginRequiredMixin, CreateView):
+    """Create a goal object."""
     template_name = 'set_goals.html'
     model = Point_goals
     form_class = Point_goals_form
@@ -41,11 +42,21 @@ class Set_goals_view(LoginRequiredMixin, CreateView):
 
      
 class See_goals_view(LoginRequiredMixin, ListView):
+    """Show all current and future goals."""
     model = Point_goals
     template_name = 'see_goal_list.html'
 
     #send the goals based off of year and month 
     def goals(self):
+        """Return current users current goals.
+        
+        Args:
+            now_date(DateTime): today's current date
+            current_user_goals: a queryset of all the currents user's goals
+            date_ordered_goals(querset): users goals with an end date greater or equal to today
+                and a start date less than or equal to today
+
+        """
         # order the goals by the current user
         # order the goals by there date 
         # have a table with point goal, start date, end date, is active check mark, accomplished goal or not 
@@ -57,6 +68,14 @@ class See_goals_view(LoginRequiredMixin, ListView):
         return date_ordered_goals
 
     def future_goals(self):
+        """ Return all user goals that start later than today.
+        
+        Args:
+            current_user_goals(QuerySet): current users goals
+            now_date(DateTime): Today's date
+            past_goals(QuerySet): User's goals that start before today
+
+        """
         current_user_goals = Point_goals.objects.filter(user=self.request.user)
         now_date = now()
         past_goals = current_user_goals.filter(goal_start_date__gt=now_date)
@@ -74,10 +93,19 @@ class See_goals_view(LoginRequiredMixin, ListView):
 
 
 class Past_goals(LoginRequiredMixin, ListView):
+    """Show all past user goals. """
     model = Point_goals
     template_name = 'past_goal_list.html'
     
     def past_goals(self):
+        """
+        
+        Args:
+            current_user_goals(QuerySet): current users goals
+            now_date(DateTime): Today's date
+            past_goals(QuerySet): User's goals that end before today
+
+        """
         current_user_goals = Point_goals.objects.filter(user=self.request.user)
         now_date = now()
         past_goals = current_user_goals.filter(goal_end_date__lt=now_date)
@@ -93,11 +121,13 @@ class Past_goals(LoginRequiredMixin, ListView):
 
 
 class Delete_goal(LoginRequiredMixin, DeleteView):
+    """Allow user to delete a goal. """
     template_name = 'delete_goal.html'
     model = Point_goals
     success_url = '/goals/see_goals'
 
     def get_context_data(self, **kwargs): # might not need this 
+        """Send all user goals, ordered by date to the corresponding template page."""
         context = super(Delete_goal, self).get_context_data(**kwargs)
         user_goals = Point_goals.objects.filter(user=self.request.user)
         user_goals = Point_goals.objects.order_by('date') 

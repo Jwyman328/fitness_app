@@ -14,20 +14,24 @@ from .forms import New_challenge_invitation_form
 
 
 class Create_a_challenge_view(LoginRequiredMixin, CreateView):
+    """Allow user to create a challenge invitation object and challenge object.
+    
+    Send challenge invitation to invitees, submit current user to challenge created.
 
+    """ 
     template_name = 'make_a_challenge.html'
     model = Invitation_to_challenge
     form_class = New_challenge_invitation_form
     success_url = '/challenges/Accepted_challenges_list'
 
     def get_form_kwargs(self): #https://gist.github.com/vero4karu/ec0f82bb3d302961503d
-        # pass variables from the view to the form
+        """Pass user personal key to the related form"""
         kwargs = super(Create_a_challenge_view, self).get_form_kwargs()
         kwargs['user_id'] = self.request.user.pk
         return kwargs
 
-    def create_invitor_status_accepted(self): # delete
-        # have to do the add magic to this thing 
+    def create_invitor_status_accepted(self): 
+        """Set the current user challenge invitation status to accepted."""
         this_user_model_id  = (self.request.user.id)
         invitor_user_model_obj = My_custom_user.objects.get(id=this_user_model_id)
         # get this invitation in updatable add form
@@ -35,6 +39,10 @@ class Create_a_challenge_view(LoginRequiredMixin, CreateView):
         this_invitation.Invitation.add(invitor_user_model_obj)
 
     def form_valid(self, form):
+        """Create invivation_status object for current user and set status to accepted.
+        
+        Actions take place after the form is submitted.
+        """
         form.instance.invitor_user_model = self.request.user
         form.instance.username_of_invitor = self.request.user.username
         status_obj = Invitation_status.objects.create(invitee=self.request.user, status='accepted' )
@@ -53,13 +61,16 @@ class Create_a_challenge_view(LoginRequiredMixin, CreateView):
 
 
 class Accept_deny_challenge_view(LoginRequiredMixin, ListView):
+    """Mailbox for all challenge invitations that have not been accepted or rejected.
+    
+    """
     template_name = 'accept__deny_challenge.html'
     model = Invitation_to_challenge
     success_url = '/'
 
     # give the template just this users invitations that have not been accepted 
     def unanswered_challenge_invitations_returned(self):
-        """Check for challenge invitations,if found, create and send a message"""
+        """Check for challenge invitations with status idle and return a list of them."""
         current_user_obj = self.request.user
         all_invitations_status_objects = current_user_obj.invitation_status_set.filter(status='idle')
         return all_invitations_status_objects
@@ -75,23 +86,22 @@ class Accept_deny_challenge_view(LoginRequiredMixin, ListView):
         
 
 class Update_invitation_status(LoginRequiredMixin, UpdateView):
+    """Allow the user to change their invitation status from idle to rejected or accpeted."""
     template_name = 'update_invitation_status.html'
     model = Invitation_status
     fields = ['status']
     success_url = '/challenges/pending_invitations'
 
     def form_valid(self, form):
-
-        # get the object
+        """ """
+        
         def change_status():
-            current_status = form.instance.status 
+            """Add user as a partipant if they have set invitation status to accepted."""
+            current_status = form.instance.status  # get status submitted in the update form
             if current_status == 'accepted': # add them to the participants:
-                # get the invitation_id
-                # must add this user as participant in the challenge 
-                # if they change thier status to accepted
-                challenges = form.instance.invitation.challenge_set.all()
+                challenges = form.instance.invitation.challenge_set.all() # get challenges related to this invitation
                 for challenge in challenges:
-                    challenge.participants.add(self.request.user)
+                    challenge.participants.add(self.request.user) # add this user to to the participants of this challenge 
 
         change_status()
         return super().form_valid(form)
@@ -107,25 +117,34 @@ class Update_invitation_status(LoginRequiredMixin, UpdateView):
         
             
 class Accepted_challenges_view(LoginRequiredMixin, ListView):
+    """Show a list of all challenges accepted by the user."""
     template_name = 'Accepted_challenges_list.html'
     model = Invitation_to_challenge
     
     def accepted_challenge_invitations(self):
-        # get all the invitations that relate to this user
-        # get all the challenges that this user is in
-        # then only get the invitations that are not related to the challenges he is in
+        """Return a list of accepted challenges.
+        
+        Before returning the list, if this user has created a challenged
+        set that challenges invitation status object to the correct invitation pk.
+
+        """
 
         def set_creator_of_invitation():
-            ''' when a user creates a challenge they are added to the invitation list
-            but without an invitation object attached, this function corrects that'''
-            all_users_invitations_created = self.request.user.invitation_to_challenge_set.all()
+            """Add the invitation object to the invitation status database for the creator of the challenge
+            
+            When a challenge is created and an invitation is sent, the creator
+            does not have the invitaion obj attached to the invitation status 
+            object. To correct this the creator's invitation status object must 
+            take the invitation object from the invitation status object one 
+            in front of it (by pk), which will be one of the users invited
+            who contains the correct invitation object pk. This invitation object
+            will then be added as the creators status object invitation.
+
+            """
+            all_users_invitations_created = self.request.user.invitation_to_challenge_set.all() #get all invitations
             #get this users invitation_status that are null
             all_users_invitation_status_null = self.request.user.invitation_status_set.filter(invitation=None)
             for obj in all_users_invitation_status_null:
-                # get id 
-                # add 1 to id
-                # get that id obj invitation
-                # then put the invitation in that original id
                 obj_id = obj.id
                 obj_id_plus_one = int(obj.id) + 1
                 my_invitation_status_obj = Invitation_status.objects.get(id=obj_id_plus_one)
@@ -142,10 +161,15 @@ class Accepted_challenges_view(LoginRequiredMixin, ListView):
         current_challenges = current_challenges.filter(invitation__start_date__lte=now_date)
         current_challenges = current_challenges.order_by('invitation__end_date')
         #all_invitations = current_user_obj.invitation_to_challenge_set.all()
-       
         return(current_challenges)
 
     def future_challenge_data(self):
+        """Gather and return only challenges in the future from today.
+        
+        The today, is in reference to which ever day in which 
+        the function is referened to.
+
+        """
         current_user_obj = self.request.user
         all_invitations_status_objects = current_user_obj.invitation_status_set.filter(status='accepted')
         # now get the ones that the end date are older than today 
@@ -165,10 +189,15 @@ class Accepted_challenges_view(LoginRequiredMixin, ListView):
         
             
 class Past_accepted_challenges(LoginRequiredMixin, ListView):
+    """Show a list of past accepted challenges."""
     template_name = 'Past_accepted_challenges.html'
     model= Invitation_to_challenge
 
     def past_challenge_data(self):
+        """Return a list of past accepted challenges.
+        
+        Order such list from newest to oldest.
+         """
         current_user_obj = self.request.user
         all_invitations_status_objects = current_user_obj.invitation_status_set.filter(status='accepted')
         # now get the ones that the end date are older than today 
@@ -188,6 +217,7 @@ class Past_accepted_challenges(LoginRequiredMixin, ListView):
         
             
 class Challenge_leaderboard(LoginRequiredMixin, DetailView):
+    """For each challenge show participants and thier scores in order most-least."""
     template_name = 'challenge_leaderboard.html'
     model = Challenge
 
@@ -196,18 +226,25 @@ class Challenge_leaderboard(LoginRequiredMixin, DetailView):
     # a function that calculates the challenge_catagory total
 
     def leader_board_data(self):
-        challenge_obj = self.get_object()
+        """Create and return a dict of each partipant and their total points.
+        
+        Each challenge will contain participants and each participant(user obj)
+        contains a method that will generate a point total for each challenge,
+        such method will be called to generate the users total points for that 
+        challenge.
+
+        """
+        challenge_obj = self.get_object() # each challenge object gets a Challenge_leaderboard class
         participants = challenge_obj.participants.all()
         username_total = {} #'username': total
         for participant in participants:
-            participant_total = participant.points_for_challenge(
+            # points_for_challenge is a user object method for generating point totals
+            participant_total = participant.points_for_challenge( 
                 challenge_obj.start_date, challenge_obj.end_date,
                 challenge_obj.challenge_health_field)
             participant_username = participant.username
             username_total[participant_username] = participant_total
-        
-        # order the dictionary based off total
-        #username_total = sorted(username_total)
+        # order the dictionary based off totals
         sorted_dict = sorted(username_total.items(), key=operator.itemgetter(1), reverse=True)
         return(sorted_dict)
     

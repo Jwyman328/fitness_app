@@ -13,7 +13,18 @@ from users.models import My_custom_user
 
 # Create your models here.
 class User_point_input_model(models.Model):
-    """ input daily results, default settings of 0/null""" 
+    """Health Data in the total value of each specific catagory
+    
+    attributes: 
+        user(obj): the current user object
+        date(datefield): the date of the health actions
+        Hours_of_sleep(int): the hours of sleep
+        water_100oz(Boolean): True,if 100oz of water was drank 
+        workout_intensity(int): value of 1-4 based on intensity of workout
+        workout_amount_of_time(int): value in minutes of workout time
+        steps(int): amount of total steps
+
+    """ 
     user = models.ForeignKey(
                settings.AUTH_USER_MODEL,
                on_delete=models.CASCADE, 
@@ -37,14 +48,25 @@ class User_point_input_model(models.Model):
     steps = models.PositiveIntegerField(default = 0)
     
     def __str__(self):
+        """return the health input objects date as the representive string."""
         return  (str(self.date))
 
     def get_absolute_url(self):
+        """Return the user to the homepage, once the health input object is created. """
         return reverse('home')
 
-    def show_points(self):
-
+    def create_point_object(self):
+        """Create corresponding point model object from calculations of the health input data."""
         def water_clean_eating_point_func(water_or_clean_eating_true_false):
+            """ if the input is true, return 10
+                
+            Args: 
+                water_or_clean_eating_true_false (boolean): True false, if the user 
+                ate clean or drank 100oz of water.
+
+            return: int:10 if param true
+
+            """
             if water_or_clean_eating_true_false == True:
                 return 10
             else:
@@ -83,6 +105,15 @@ class User_point_input_model(models.Model):
     def update_points(self):
 
         def water_clean_eating_point_func(water_or_clean_eating_true_false):
+            """ if the input is true, return 10
+                
+            Args: 
+                water_or_clean_eating_true_false (boolean): True false, if the user 
+                ate clean or drank 100oz of water.
+
+            Return: int:10 if param true
+
+            """
             if water_or_clean_eating_true_false == True:
                 return 10
             else:
@@ -107,13 +138,35 @@ class User_point_input_model(models.Model):
                 user=user )
 
     def save(self, *args, **kwargs):
+        """Save the healh input health object, and after create a corresponding point obj."""
         is_new = True if not self.id else False # https://stackoverflow.com/questions/28264653/how-create-new-object-automatically-after-creating-other-object-in-django
         super(User_point_input_model, self).save(*args, **kwargs)
         if is_new:
-            self.show_points() 
+            self.create_point_object() 
 
 
 class Point_model(models.Model):
+    """Point obj relating to a corresponing User_point_input_model object. 
+    
+    this object is generate automatically when the User_point_input_model
+    object is create by the user.
+
+    Attributes:
+        sleep_points(int): sleep hrs* 3.3
+        date(datefield): date of points
+        water_points(int): int of 10, if the user drank 100oz of water
+        workout_points(int): int based off of workouttime * workout intensity
+        one_to_one_workout(obj): corresponding User_point_input_model
+        total_points(int): sum of sleep_points, water_points, 
+            workout_points,step points, and clean eating points
+        clean_eating_points(int): int of 10, if the user ate clean
+        step_points(int): total steps *.001
+        user(obj): user that input User_point_input_model
+        daily_point_goal(int): point total relating to a corresponing point_goal object
+        up_to_date_total_points_accumulated(int) = total for all users point models from 
+            this date and before this date.
+
+    """
     sleep_points = models.PositiveIntegerField(default=0)
     date = models.DateField(default=now, editable=True)
     water_points = models.PositiveIntegerField(default=0)
@@ -135,7 +188,7 @@ class Point_model(models.Model):
         default=0, null=True, blank=True)
 
     def update_total_points_for_goal(self):
-        
+        """Update the correspong goal objs current point total."""
         all_point_goals = Point_goals.objects.filter(user=self.user) 
         # get all the goals for this user
         for obj in all_point_goals: # each start date obj
@@ -161,7 +214,6 @@ class Point_model(models.Model):
     
     def total_points_accumulated(self):
         '''add points created to the users total points in this users model'''
-
         this_user_point_models = Point_model.objects.filter(user=self.user).filter(date__lt = self.date).aggregate(Sum('total_points'))
         if this_user_point_models['total_points__sum'] == None: # if this is the lowest date 
             self.up_to_date_total_points_accumulated = self.total_points
@@ -200,11 +252,23 @@ class Point_model(models.Model):
 
 
 class Point_goals(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete = models.CASCADE, null = True, blank=True ) 
+    """A daily point total goal for a spanned time,start date - end date.
     
-    def get_self_user(self):
-        self_user = self.user
+    Attributes:
+        user(obj): the user who set the goal
+        goal_start_date(datefield): the first day the goal starts
+        goal_end_date(datefield): the last day the goal exists
+        point_goal(int): the total point goal for each day in the date range
+        goal_accomplished(str): a str represnting if the goal has been reached for the day
+        points_needed_for_goal_achieved(int): the total points needed based off of
+            number of days of the goal * point_goal
+        current_point_total_input(int) = sum total of every single point obj
+            that exists between goal_start_date and goal_end_date
 
+    """
+    user = models.ForeignKey(
+            settings.AUTH_USER_MODEL, on_delete = models.CASCADE,
+            null = True, blank=True ) 
     goal_start_date = models.DateField(
             default=now, editable=True, help_text='year-month-day')
     goal_end_date = models.DateField(
@@ -219,6 +283,11 @@ class Point_goals(models.Model):
             default=0, null=True, blank=True)
 
     def points_needed_to_reach_goal(self):
+        """Calculate and update the points needed to acomplish this goal.
+        
+        points needed to acomplish goal = days in goal * points per day
+
+        """
         #date_format = "%Y/%m/%d"
         date_time_start = self.goal_start_date
         date_time_end = self.goal_end_date
@@ -232,6 +301,7 @@ class Point_goals(models.Model):
                 points_needed_for_goal_achieved=days_times_daily_points)
     
     def remove_goal_from_individual_point_inputs(self):
+        """Update all point objects relating to goal object to 0. """
         # find all individual days that this goal was set for 
         # update thier goal count to 0
         # get a date range, can do with a filter, then can update an entire filter 
@@ -239,25 +309,31 @@ class Point_goals(models.Model):
         point_obj_in_goal_date_range.update(daily_point_goal=0.0)
     
     def add_goal_field_to_point_object(self):
-        
+        """Add the daily point goal to each point model that falls between the goals start and end date."""
         for obj in Point_model.objects.filter(user=self.user): # only get the point_input related to the user that set the goal 
             if obj.date >= self.goal_start_date and obj.date <= self.goal_end_date:                
                 updatable_point_model_filter = Point_model.objects.filter(id=obj.id)
                 updatable_point_model_filter.update(daily_point_goal=self.point_goal)
 
     def add_up_current_points_towards_goal(self):
+        """Add the current points that exist towards this goal."""
         current_sum_points_in_goal_date_range = 0
         point_obj_for_user = Point_model.objects.filter(user=self.user)
         point_obj_in_goal_date_range = point_obj_for_user.filter(date__range=[self.goal_start_date,self.goal_end_date])
         for obj in point_obj_in_goal_date_range:
             current_sum_points_in_goal_date_range += obj.total_points
-        
         # now update it 
         current_goal_obj = Point_goals.objects.filter(id=self.id)
         current_goal_obj.update(
             current_point_total_input=int(current_sum_points_in_goal_date_range)  )
 
     def save(self, *args, **kwargs):
+        """Save the current goal and after call corresponding functions
+        
+        corresonding functions: add_goal_field_to_point_object,
+            points_needed_to_reach_goal, add_up_current_points_towards_goal
+
+         """
         date_conflict = False
         for obj in Point_goals.objects.filter(user=self.user):
             if self.goal_start_date >= obj.goal_start_date and self.goal_start_date <= obj.goal_end_date: # if the start date is inside preexisting goal

@@ -13,6 +13,18 @@ from users.models import My_custom_user
 # Create your models here.
 
 class Challenge(models.Model):
+    """Allow users to compete against other users for a time period, over a specific health catagory.
+    
+    Args:
+        challenge_health_field_choices(list of tuples): options for health catagories
+        title(str): title of the challenge
+        participants(M2M): database of users that have accepted the related challenge invitation
+        invitations(FK object): related invitation object for each challenge
+        start_Date(DateTime): Start date of the challenge
+        end_date(DateTime): End date of the challenge 
+        challenge_health_field(str): A single challenge health field that users compete for points over
+  
+    """
     challenge_health_field_choices = [
         ('sleep_points', 'Sleep'),('water_points', 'Water'), 
         ('clean_eating_points', 'Clean Eating'), ('step_points', 'Steps'),
@@ -36,6 +48,19 @@ class Challenge(models.Model):
 
 
 class Invitation_to_challenge(models.Model):
+    """Invitation to a challenge send to users to be accepted or rejected.
+    
+    Args:
+        challenge_health_field_choices(list of tuples): options for health catagories
+        start_Date(DateTime): Start date of the challenge
+        end_date(DateTime): End date of the challenge 
+        invitees(M2M): database of users that have been sent an invitation
+        invitor_user_model(FK obj): User obj who has created and sent out the invitation
+        user_name_of_invitor(str): Username of the invitor
+        title(str): title of the invitation/challenge
+
+    """
+
     challenge_health_field_choices = [
         ('sleep_points', 'Sleep'), ('water_points', 'Water'), 
         ('clean_eating_points' ,'Clean Eating'), ('step_points', 'Steps'),
@@ -60,12 +85,27 @@ class Invitation_to_challenge(models.Model):
     title=models.CharField(max_length=200)
     
     def invitor_username(self):
+        """Get and return Invitation to challenges creator's username.
+        
+        Args:
+            this_user_model_id(str): id of the user model
+            invitor_user_model_obj(obj): user model object of the invitation invitor
+            invitor_username(str): username of the invitor
+
+        """
         this_user_model_id  = str(self.invitor_user_model.id)
         invitor_user_model_obj = My_custom_user.objects.get(id='this_user_model_id')
         invitor_username = str(invitor_user_model_obj.username)
         return invitor_username
 
     def create_challenge(self):
+        """Create and return a challenge object from the invitation arguments.
+        
+        Args:
+            this_invitation(obj): invitation object 
+            challenge_created(obj): newly created challenge object
+
+        """
         this_invitation = Invitation_to_challenge.objects.get(id = self.id)
         challenge_created = Challenge.objects.create(title=self.title, 
             invitations=this_invitation, start_date=self.start_date, 
@@ -73,19 +113,34 @@ class Invitation_to_challenge(models.Model):
             challenge_health_field=self.challenge_health_field)
         return challenge_created
 
-    def create_invitor_status_accepted(self): 
+    def create_invitor_status_accepted(self):  # believe i can delete this func
+        """ Add the creator of the invitation as someone who recieved an invitation.
+        
+        Args:
+            this_user_model_id(str): id of the invitor's user object
+            invitor_user_model_obj(obj): invitor's user object
+            this_invitation(obj): current invitation object
+            
+         """
         this_user_model_id  = str(self.invitor_user_model.id)
         invitor_user_model_obj = My_custom_user.objects.get(id=this_user_model_id)
         # get this invitation in updatable add form
         this_invitation = Invitation_to_challenge.objects.get(id=self.id)
-        this_invitation.Invitation.add(invitor_user_model_obj)
+        this_invitation.Invitation.add(invitor_user_model_obj) 
 
     def save(self, *args, **kwargs):
+        """ save the invitation object,after create a corresponding challenge obj.
+
+        As well add the creator of the invitation as a participant of the challenge.
         
+        Args:
+            challenge_created(obj): challenge object that corresponds to this invitation object
+            
+        """
         is_new = True if not self.id else False # https://stackoverflow.com/questions/28264653/how-create-new-object-automatically-after-creating-other-object-in-django
         super(Invitation_to_challenge, self).save(*args, **kwargs)
         if is_new:
-            # make the inivation
+            # after invitation is made
             challenge_created = self.create_challenge()
             # then add the participants 
             # have to use the custom through model Invitation_status
@@ -97,6 +152,18 @@ class Invitation_to_challenge(models.Model):
         return self.title
 
 class Invitation_status(models.Model):
+    """Through model for each invitation that contains the status of each invitation.
+    
+    Args:
+        idle(str): status that the invitation to the challenge has not been accepted or rejected
+        accepted(str): status that the invitation to the challenge has been accepted
+        rejected(str): status that the invitation to the challenge has been rejected
+        status_options(lst):: list of choices for the invitation status
+        invitation(obj): Invitation object
+        invitee(obj): User object that has been invited to the challenge, and recieved an invitation
+        status(str): Status of the invitation to the challenge, accepted, rejected, or idle
+
+    """
     # the throughh model for Invitation_to_challenge_invitees 
     # this way for each invitation to every user, we can see if they accept, deny or its idle 
 
@@ -113,8 +180,13 @@ class Invitation_status(models.Model):
     status = models.CharField(
         max_length=100, choices=status_options, default=idle  )
 
-    def set_status_accepted(self):
-        # get this invitation_status_model 
+    def set_status_accepted(self): # beleive it is not used, can delete
+        """Set this objects status to accepted.
+    
+        Args:
+            this_invitation_status_model_obj(obj): this invitation_status object in updateable form
+        
+        """
         this_invitation_status_model_obj = Invitation_status.objects.filter(id=self.id)
         this_invitation_status_model_obj.update(status=accepted)
 

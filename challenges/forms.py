@@ -6,7 +6,17 @@ from .models import Challenge, Invitation_to_challenge
 
 
 class New_challenge_invitation_form(forms.ModelForm):
-
+    """
+    Args:
+        invitees(list): list of people to invite to the challenge
+        user_id(int): id of the user interacting with the form
+        challenge_health_field_options(list): a list of tuples of choices of health challenge categories
+        title(str): title of the challenge/invitation
+        start_Date(DateTime): Start date of the challenge
+        end_date(DateTime): End date of the challenge 
+        challenge_health_field(str): a single health field data choosen from the challenge_health_field_options
+    
+     """
     class Meta:
         model = Invitation_to_challenge
         fields = ['title', 'start_date','end_date','challenge_health_field', 'invitees']  
