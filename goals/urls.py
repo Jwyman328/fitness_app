@@ -23,4 +23,8 @@ urlpatterns = [
     path('see_goals', views.See_goals_view.as_view(), name='see_goals'),
     path('past_goals', views.Past_goals.as_view(), name='past_goals'),
     path('delete_goal/<int:pk>/', views.Delete_goal.as_view(), name='delete_goal'),
+    path('General_Goals', views.GeneralGoals.as_view(), name = 'GeneralGoals'),
+    path('returnAllGoalsDataJson', views.returnAllGoalsDataJson, name='returnAllGoalsDataJson'),
+    path('returnCurrentGoals', views.returnCurrentGoals, name='returnCurrentGoals'),
+    path('specific_goal_graph/<int:pk>/', views.specific_goal_graph.as_view(), name='specific_goal_graph')
 ]

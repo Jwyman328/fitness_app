@@ -1,0 +1,181 @@
+{% extends 'base.html' %}
+<!-- display each individual days points recap in a bar graph -->
+
+{% block content %}
+
+{% if object.user.username == user.username %} <!-- only allow users to view their own data --> 
+ 
+
+<body>
+        <div class='row-12'>
+                <!-- As a heading -->
+                <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                      <a class="navbar-brand" href="{% url 'general_results' %}">Graphs</a> <!-- this will be this page, showing graphs-->
+                      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                      </button>
+  
+                      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                        <div class="navbar-nav">
+                          <a class="nav-item nav-link" href="{% url 'daily_monthly_points_list' %}">Data Log</a>
+                        </div>
+                      </div>
+                    </nav>
+  </div>
+  <div class="col-12 text-center">
+        <h1 class="no-magellan" style="margin: 30px">Daily graph: {{object.date}}</h1>
+    </div>
+    <div id = 'thisObjectGraph'>
+            
+    </div>
+    <div class = 'container'>
+            <div class = 'col mr-auto ml-auto'>
+                    <button type="button" class="btn btn-link"><a id='update_health_data' href = "{% url 'update_health_data_input' object.one_to_one_workout_id %}"> Update Health Data  </a> </button>
+                
+            </div>
+        </div> 
+          
+  <script>
+    async function getData(){
+    let myData = await fetch('/returnAllUserDailyJson');
+    let myDataClean = await myData.json();
+    let jsonAwait = await myDataClean
+    return(jsonAwait);} //will return a promise
+
+getData().then((data) => {
+    console.log(data)
+    console.log("{{object.id }}")
+    for (let dateObjPoints of data){
+        if ("{{object.id }}" == dateObjPoints.id){
+            console.log(dateObjPoints)
+            showChart(dateObjPoints)
+        }
+    }
+    })
+
+function showChart(data){
+    
+    window.chart2 = new Highcharts.chart({
+    chart: {
+        renderTo: 'thisObjectGraph',
+        backgroundColor: '#8860D0',
+        type: 'column'
+    },
+    title: {
+        text: data.date,
+        style: {
+            fontFamily: 'monospace',
+            color: "black"
+        }
+    },
+    xAxis: {
+        categories: [
+            'total',
+            'sleep',
+            'step',
+            'Water',
+            'Workout',
+            'Clean eating',
+        ],
+        crosshair: true,
+        labels: {
+            style: {
+                color: 'black'
+            }
+        } 
+
+    },
+    yAxis: {
+        min: 0,
+        title: {
+            text: "Points",
+            style: {
+                fontFamily: 'monospace',
+                color: "black"
+            },
+        },
+        labels: {
+            style: {
+                color: 'black'
+            }
+        },
+        plotLines: [{
+            color: 'red', // Color value
+            dashStyle: 'solid', // Style of the plot line. Default to solid
+            value: data.daily_point_goal,// Value of where the line will appear
+            width: 2, // Width of the line   ,
+            zIndex: 3
+        }]
+    },
+   
+    plotOptions: {
+        column: {
+            pointPadding: 0.2,
+            borderWidth: 0
+        }
+    },
+  
+    series: [{
+            name: 'Total',
+            data: [
+                data.total_points
+            ],
+            color: '#84ceeb'
+        }, {
+            name: 'Sleep ',
+            data: [
+                data.sleep_points
+            ],
+            color: 'green'
+        }, 
+          
+            {
+            name: 'Water',
+            data: [
+                data.water_points
+
+            ],
+            color: 'blue'
+        },           
+            {
+            name: 'Clean Eating',
+            data: [
+                data.clean_eating_points
+
+            ],
+            color: 'orange'
+        },
+
+            {
+            name: 'Steps',
+            data: [
+                data.step_points
+
+            ],
+            color: 'Purple'
+        },    
+        {
+            name: 'Workout',
+            data: [
+                data.workout_points
+            ],
+            color: 'lightgreen'
+        },
+       ]
+    });} 
+    
+
+  </script>
+
+
+
+
+
+</body>
+{% else %}
+ <p> Error</p>
+{% endif %}
+
+
+
+{% endblock %}

@@ -1,7 +1,9 @@
 import operator
+import datetime
 
 from django.shortcuts import render
-from django.views.generic import CreateView, ListView, UpdateView, DetailView
+from django.views.generic import CreateView, ListView, UpdateView, DetailView, TemplateView
+from django.http.response import HttpResponse, JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.utils.timezone import now
@@ -9,6 +11,9 @@ from django.utils.timezone import now
 from .models import Challenge, Invitation_to_challenge, Invitation_status
 from users.models import My_custom_user
 from .forms import New_challenge_invitation_form
+
+from django.forms.models import model_to_dict
+
 
 # Create your views here.
 
@@ -50,15 +55,6 @@ class Create_a_challenge_view(LoginRequiredMixin, CreateView):
         # create a challenge, but only put the invitee as the only participant as of right now 
         return super().form_valid(form)
 
-    def unanswered_challenge_invitations(self):
-        """Check for challenge invitations,if found, create and send a message"""
-        current_user_obj = self.request.user
-        all_invitations_status_objects = current_user_obj.invitation_status_set.filter(status='idle')
-        if all_invitations_status_objects:
-            messages.add_message(self.request, messages.INFO, 
-                                 """Pending Invitation, to accept or reject
-                                 go to Challenges -> Pending invitations""")
-
 
 class Accept_deny_challenge_view(LoginRequiredMixin, ListView):
     """Mailbox for all challenge invitations that have not been accepted or rejected.
@@ -75,15 +71,6 @@ class Accept_deny_challenge_view(LoginRequiredMixin, ListView):
         all_invitations_status_objects = current_user_obj.invitation_status_set.filter(status='idle')
         return all_invitations_status_objects
 
-    def unanswered_challenge_invitations(self):
-        """Check for challenge invitations,if found, create and send a message"""
-        current_user_obj = self.request.user
-        all_invitations_status_objects = current_user_obj.invitation_status_set.filter(status='idle')
-        if all_invitations_status_objects:
-            messages.add_message(self.request, messages.INFO, 
-                                 """Pending Invitation, to accept or reject
-                                 go to Challenges -> Pending invitations""")
-        
 
 class Update_invitation_status(LoginRequiredMixin, UpdateView):
     """Allow the user to change their invitation status from idle to rejected or accpeted."""
@@ -106,16 +93,7 @@ class Update_invitation_status(LoginRequiredMixin, UpdateView):
         change_status()
         return super().form_valid(form)
 
-    def unanswered_challenge_invitations(self):
-        """Check for challenge invitations,if found, create and send a message"""
-        current_user_obj = self.request.user
-        all_invitations_status_objects = current_user_obj.invitation_status_set.filter(status='idle')
-        if all_invitations_status_objects:
-            messages.add_message(self.request, messages.INFO, 
-                                 """Pending Invitation, to accept or reject
-                                 go to Challenges -> Pending invitations""")
-        
-            
+ 
 class Accepted_challenges_view(LoginRequiredMixin, ListView):
     """Show a list of all challenges accepted by the user."""
     template_name = 'Accepted_challenges_list.html'
@@ -177,15 +155,6 @@ class Accepted_challenges_view(LoginRequiredMixin, ListView):
         future_challenges = all_invitations_status_objects.filter(invitation__start_date__gt=now_date)
         future_challenges = future_challenges.order_by('-invitation__end_date')
         return(future_challenges)
-
-    def unanswered_challenge_invitations(self):
-        """Check for challenge invitations,if found, create and send a message"""
-        current_user_obj = self.request.user
-        all_invitations_status_objects = current_user_obj.invitation_status_set.filter(status='idle')
-        if all_invitations_status_objects:
-            messages.add_message(self.request, messages.INFO, 
-                                 """Pending Invitation, to accept or reject
-                                 go to Challenges -> Pending invitations""")
         
             
 class Past_accepted_challenges(LoginRequiredMixin, ListView):
@@ -206,16 +175,135 @@ class Past_accepted_challenges(LoginRequiredMixin, ListView):
         past_challenges = past_challenges.order_by('-invitation__end_date')
         return(past_challenges)
 
-    def unanswered_challenge_invitations(self):
-        """Check for challenge invitations,if found, create and send a message"""
-        current_user_obj = self.request.user
-        all_invitations_status_objects = current_user_obj.invitation_status_set.filter(status='idle')
-        if all_invitations_status_objects:
-            messages.add_message(self.request, messages.INFO, 
-                                 """Pending Invitation, to accept or reject
-                                 go to Challenges -> Pending invitations""")
+   
+def returnAllUserChallenges(request):
+
+    def AllUserChallenges():
+        current_user_obj = request.user
+        now_date = now()
+        #all_invitations = current_user_obj.Invitation.all()  # without the set
+        all_invitations_status_objects = current_user_obj.invitation_status_set.filter(status='accepted')
+        current_challenges = all_invitations_status_objects
+        current_challenges = current_challenges.order_by('invitation__end_date')
+        #all_invitations = current_user_obj.invitation_to_challenge_set.all()
+        #return(current_challenges[0].invitation_id)
+        # get a list of all challenges 
+        challenge_and_participants = []
+        for challenge in current_challenges:   
+            myChallenge = Challenge.objects.get(id=challenge.invitation_id) # eventually change to an array
+            myChallengeParticipants = myChallenge.participants.all() # all participants of this challenge
+            challenge_and_participants.append({'participants':myChallengeParticipants, 'challenge':myChallenge})
+            #return(myChallengeParticipants,myChallenge)
+        #print(challenge_and_participants)
+        #return(challenge_and_participants)
+        myChallenge = Challenge.objects.get(id=current_challenges[0].invitation_id) # eventually change to an array
+        myChallengeParticipants = myChallenge.participants.all() # all participants of this challenge
+
+        return(challenge_and_participants)
+
+    def leader_board_data(list_of_dictionaries):
+        """Create and return a dict of each partipant and their total points.
         
+        Each challenge will contain participants and each participant(user obj)
+        contains a method that will generate a point total for each challenge,
+        such method will be called to generate the users total points for that 
+        challenge.
+
+        """
+        finalReturnList = []
+        for dictionary in list_of_dictionaries:
+            username_total = {}
+            usernames = []
+            points = []
+            related_challenge = dictionary['challenge']
+            challengeInfo = {'startDate': related_challenge.start_date, "endDate": related_challenge.end_date,
+                'title':related_challenge.title, "field": related_challenge.challenge_health_field}
+            participants = dictionary['participants']
+            challenge_obj = related_challenge
+            for participant in participants:
+                # points_for_challenge is a user object method for generating point totals
+                participant_total = participant.points_for_challenge( 
+                    challenge_obj.start_date, challenge_obj.end_date,
+                    challenge_obj.challenge_health_field)
+                usernames.append(participant.username)
+                points.append(participant_total)
+            DictionaryToAddtoFinalReturnList = {'id': related_challenge.id, 'data':{'userNames':usernames, 'points':points}, 'challenge_info': challengeInfo}
+            finalReturnList.append(DictionaryToAddtoFinalReturnList)
+    
+        return(finalReturnList)
+    participants_challenges = AllUserChallenges()
+    jsonAbleData = leader_board_data(participants_challenges)
+    # i have a list the contains dictionaries that contain the participants and challenge object for each 
+    #list_of_jsonableDicts = [for item in participants_challenges, leader_board_data(participants_challenges['participants'],participants_challenges['challenge_obj'])
+    
+    return JsonResponse(jsonAbleData, safe=False) # safe is false in order to send a list of dictionaries
+
+
+def returnJsonCurrentChallenge(request):
+    # this is the user i want request.user.id 
+
+    def currentUserChallenges():
+        current_user_obj = request.user
+        now_date = now()
+        #all_invitations = current_user_obj.Invitation.all()  # without the set
+        all_invitations_status_objects = current_user_obj.invitation_status_set.filter(status='accepted')
+        current_challenges = all_invitations_status_objects.filter(invitation__end_date__gte=now_date)
+        current_challenges = current_challenges.filter(invitation__start_date__lte=now_date)
+        current_challenges = current_challenges.order_by('invitation__end_date')
+        #all_invitations = current_user_obj.invitation_to_challenge_set.all()
+        #return(current_challenges[0].invitation_id)
+        # get a list of all challenges 
+        challenge_and_participants = []
+        
+        if len(current_challenges) > 0:
+            for challenge in current_challenges:   
+                myChallenge = Challenge.objects.get(id=challenge.invitation_id) # eventually change to an array
+                myChallengeParticipants = myChallenge.participants.all() # all participants of this challenge
+                challenge_and_participants.append({'participants':myChallengeParticipants, 'challenge':myChallenge})
+
             
+            myChallenge = Challenge.objects.get(id=current_challenges[0].invitation_id) # eventually change to an array
+            myChallengeParticipants = myChallenge.participants.all() # all participants of this challenge
+
+        return(challenge_and_participants)
+
+    def leader_board_data(list_of_dictionaries):
+        """Create and return a dict of each partipant and their total points.
+        
+        Each challenge will contain participants and each participant(user obj)
+        contains a method that will generate a point total for each challenge,
+        such method will be called to generate the users total points for that 
+        challenge.
+
+        """
+        finalReturnList = []
+        for dictionary in list_of_dictionaries:
+            username_total = {}
+            usernames = []
+            points = []
+            related_challenge = dictionary['challenge']
+            challengeInfo = {'startDate': related_challenge.start_date, "endDate": related_challenge.end_date,
+                'title':related_challenge.title, "field": related_challenge.challenge_health_field}
+            participants = dictionary['participants']
+            challenge_obj = related_challenge
+            for participant in participants:
+                # points_for_challenge is a user object method for generating point totals
+                participant_total = participant.points_for_challenge( 
+                    challenge_obj.start_date, challenge_obj.end_date,
+                    challenge_obj.challenge_health_field)
+                usernames.append(participant.username)
+                points.append(participant_total)
+            DictionaryToAddtoFinalReturnList = {'data':{'userNames':usernames, 'points':points}, 'challenge_info': challengeInfo}
+            finalReturnList.append(DictionaryToAddtoFinalReturnList)
+    
+        return(finalReturnList)
+    participants_challenges = currentUserChallenges()
+    jsonAbleData = leader_board_data(participants_challenges)
+    # i have a list the contains dictionaries that contain the participants and challenge object for each 
+    #list_of_jsonableDicts = [for item in participants_challenges, leader_board_data(participants_challenges['participants'],participants_challenges['challenge_obj'])
+    
+    return JsonResponse(jsonAbleData, safe=False) # safe is false in order to send a list of dictionaries
+
 class Challenge_leaderboard(LoginRequiredMixin, DetailView):
     """For each challenge show participants and thier scores in order most-least."""
     template_name = 'challenge_leaderboard.html'
@@ -224,6 +312,12 @@ class Challenge_leaderboard(LoginRequiredMixin, DetailView):
     #get all the users for this challenge  with participants
     # then for the start - finish proclaimed, get the points of that catagory
     # a function that calculates the challenge_catagory total
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        data = self.get_context_data(object=self.object)
+        if self.request.GET:
+                return JsonResponse({'data': "data"})
+        return self.render_to_response(data)
 
     def leader_board_data(self):
         """Create and return a dict of each partipant and their total points.
@@ -246,16 +340,13 @@ class Challenge_leaderboard(LoginRequiredMixin, DetailView):
             username_total[participant_username] = participant_total
         # order the dictionary based off totals
         sorted_dict = sorted(username_total.items(), key=operator.itemgetter(1), reverse=True)
+        #print(sorted_dict)
         return(sorted_dict)
     
-    def unanswered_challenge_invitations(self):
-        """Check for challenge invitations,if found, create and send a message"""
-        current_user_obj = self.request.user
-        all_invitations_status_objects = current_user_obj.invitation_status_set.filter(status='idle')
-        if all_invitations_status_objects:
-            messages.add_message(self.request, messages.INFO, 
-                                 """Pending Invitation, to accept or reject
-                                 go to Challenges -> Pending invitations""")
+    
+
+class GeneralChallenges(LoginRequiredMixin, TemplateView):
+    template_name = 'general_challenges.html'
         
             
 

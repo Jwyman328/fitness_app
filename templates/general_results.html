@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% load static %} 
+{% block content %}
+
+<div class='row-12'>
+              <!-- As a heading -->
+              <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                    <a class="navbar-brand" href="{% url 'general_results' %}">Graphs</a> <!-- this will be this page, showing graphs-->
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                      <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                      <div class="navbar-nav">
+                        <a class="nav-item nav-link" href="{% url 'daily_monthly_points_list' %}">Data Log</a>
+                      </div>
+                    </div>
+                  </nav>
+</div>
+<div class='container'> <!--keeps edges free-->
+    <div class="col-12 text-center">
+            <h2 class="no-magellan" style="margin: 30px">Activity Trends</h2>
+          </div>
+    <div class='row-12'>
+            
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                    <div class="navbar" id="navbarSupportedContent">
+                      <ul class="navbar-nav mr-auto">
+
+                        <label style="padding:15px">Data type
+                        <li class="nav-item dropdown">
+
+                            <select id='dataTypeSelect' class="form-control">
+                                    <option value="Total">Total</option>
+                                    <option value="Sleep">Sleep</option>
+                                    <option value="Water">Water</option>
+                                    <option value="Clean Eating">Clean Eating</option>
+                                    <option value="Steps">Steps</option>
+                                    <option value="Workout">Workout</option>
+                                </select>
+                        </li>
+                        </label>
+
+                        <label style="padding:15px">Date Range
+                        <li class="nav-item dropdown">
+                                <select id='dataRangeSelect' class="form-control">
+                                        <option value="7Days">7 days</option>
+                                        <option value="30Days">30 days</option>
+                                        <option value="60Days">60 days</option>
+                                        <option value="90Days">90 days</option>
+                                        <option value="custom">Custom</option>
+                                    </select>
+                            </li>
+                            </label >
+
+                            <label style="padding:15px">Metric Type
+                                <li class="nav-item dropdown">
+                                        <select id='dataMetricSelect' class="form-control">
+                                                <option value="Points">Points</option>
+                                                <option value="ActivityMetric">Activity Metric</option>
+                                            </select>
+                                    </li>
+                                </label >
+
+                      
+
+                          </ul>
+
+                </nav>
+</div>
+   
+
+   
+
+    <div class='col-13 mx-auto' id='graphContainer'>
+        
+      </div>
+      
+      <div class="row-12 mb-4">
+        <div class='card-group'>
+
+          
+            <div class="card">
+              <div class="card-body">
+                <h5 id='maxTitle' class="card-title">Max Points</h5>
+                <p id='max'class="card-text">date: points </p>
+              </div>
+            </div>
+          
+              <div class="card">
+                <div class="card-body">
+                  <h5 id='minTitle'  class="card-title">Min Points </h5>
+                  <p id='min' class="card-text">date: points</p>
+                </div>
+              </div>
+            
+
+            <div class="card">
+              <div class="card-body">
+                <h5 id='avgTitle' class="card-title">Avg 'type' Points </h5>
+                <p id='avgBody' class="card-text">points</p>
+              </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                  <h5 id='totalAmount' class="card-title">Total</h5>
+                  <p id='total' class="card-text">points</p>
+                </div>
+              </div>
+        </div>
+
+        </div>
+    
+
+    
+        
+     
+  </div>
+
+</div>
+    <script src="{% static 'js/generalResultsMetricTwoFunc.js' %}"></script>
+   <!-- <script src="{% static 'js/generalResultsMetricTypeTest.js' %}"> </script> -->
+
+    <!--<script src="{% static 'js/generalResultsJsTest.js' %}"> </script> -->
+
+
+
+
+
+{% endblock %}

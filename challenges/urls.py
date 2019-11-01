@@ -37,4 +37,7 @@ urlpatterns = [
     path('challenge_leaderboard/<int:pk>/',
           views.Challenge_leaderboard.as_view(),
           name='Challenge_leaderboard'),
+      path('returnJsonCurrentChallenge', views.returnJsonCurrentChallenge, name='returnJsonCurrentChallenge'),
+      path('returnAllUserChallenges', views.returnAllUserChallenges, name='returnAllUserChallenges'),
+      path('general_challenges', views.GeneralChallenges.as_view(), name='GeneralChallenges'),
 ]

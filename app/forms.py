@@ -15,21 +15,25 @@ class Point_goals_form(forms.ModelForm):
 
     class Meta:
         model = Point_goals
-        fields = ['point_goal','goal_start_date','goal_end_date']  
+        fields = ['goal_health_field', 'goal_metric_field', 'point_goal','goal_start_date','goal_end_date', ]  
+        labels = {'point_goal': 'Daily Goal'}
     
     def clean_goal_start_date(self):
-        """Validate that the start date input does not already exist.
+        """Validate that the start-date + metric field + health field input does not already exist.
         
         If it exists, return an error message.
 
         """
         goal_start_date_passed = self.cleaned_data.get('goal_start_date')
+        goal_metric_field = self.cleaned_data.get("goal_metric_field")
+        goal_health_field = self.cleaned_data.get("goal_health_field")
         this_user = self.user
         
         for obj in Point_goals.objects.filter(user = this_user):
             if (goal_start_date_passed >= obj.goal_start_date and
-                    goal_start_date_passed <= obj.goal_end_date): # if the start date is inside preexisting goal
-                raise forms.ValidationError(("Sorry, a goal already exists for some of these dates, choose different dates, or delete the other goal"))
+                    goal_start_date_passed <= obj.goal_end_date and goal_metric_field == obj.goal_metric_field 
+                    and goal_health_field == obj.goal_health_field): # if the start date is inside preexisting goal
+                raise forms.ValidationError(("Sorry, a goal of the same metric and health field already exists for some of these dates, choose different dates,metric, health field, or delete the other goal"))
             else:
                 pass
         return goal_start_date_passed

@@ -2,12 +2,11 @@
 
 {% block content %}
 {% if user.is_authenticated %}
-<p style="color:white">{{view.unanswered_challenge_invitations}}</p> 
-{% endif %}
+ {% endif %}
     <div class = 'container'>
         <div class = 'row align-items-center justify-content-center'></div>
         <div class = 'col mr-auto ml-auto'>
-                <h1 style="color : red"> How to Earn Points</h1>
+                <h1 id='rules_title' style="color : red"> How to Earn Points</h1>
                 <ul>
                         <li> Clean Eating Points: Eat Clean the entire day, 10 points</li>
                         

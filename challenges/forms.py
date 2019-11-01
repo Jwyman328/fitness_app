@@ -18,7 +18,6 @@ class New_challenge_invitation_form(forms.ModelForm):
     
      """
 
-     
     class Meta:
         model = Invitation_to_challenge
         fields = ['title', 'start_date','end_date','challenge_health_field', 'invitees']  

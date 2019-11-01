@@ -1,26 +1,164 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<p style="color:white">{{view.unanswered_challenge_invitations}}</p> 
+<div class='row-12'>
+    <!-- As a heading -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <a class="navbar-brand" href="{% url 'GeneralChallenges' %}">My challenges</a> <!-- this will be this page, showing graphs-->
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent2" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarSupportedContent2">
+              <ul class="navbar-nav mr-auto">
+                  <li class="nav-item" >
+                          <a id='create_challenge' class = "nav-link mx-1" href= "{% url 'create_a_challenge' %}"> Create Challenge</a>
+                  </li>
+                  <li class="nav-item">
+                    <a id='pending_invitations' class = "nav-link mx-1" href= "{% url 'invitations_pending' %}"> Pending Invitations</a>
+                  </li>
+
+              </ul>
+                  <ul class="navbar-nav ml-auto">
+                          <li class="nav-item" >
+                                  <a id='create_challenge' class = "nav-link mx-1" href= "{% url 'past_accepted_challenges' %}"> Past Challenges Log</a>
+                          </li>
+                          <li class="nav-item">
+                            <a id='pending_invitations' class = "nav-link mx-1" href= "{% url 'accepted_challenges_list' %}"> Current-Future Challenges Log</a>
+                          </li>
+
+                      </ul>
+
+          </div>
+      </nav>
+</div>
+
+<p style="color:#c1c8e4">{{view.unanswered_challenge_invitations}}</p> 
 <div class = 'container'>
+    <div class="col-12 mx-2 my-4" id='currentChallenge' style="height: 400px; border-style:none; border-collapse: collapse;" ></div>
+
+    <br>
+    <br>
       <div class = 'row'>
-        <h1> Leader Board: {{object.title}}  </h1>
+        <h3 id='challenge_title'>    </h3> <!--Leader Board: {{object.title}}-->
         <table class="table">
                 <thead>
                   <tr>
                     <th scope="col">Name</th>
-                    <th scope="col">{{object.challenge_health_field}} </th>
+                    <th id='challenge_health_field' scope="col">{{object.challenge_health_field}} </th>
                   </tr>
                 </thead>
                 <tbody>
                   {% for username, total in view.leader_board_data %}
                   <tr>
-                    <th scope="row">{{username}}</th>
-                    <td>{{total}}</td>
+                    <th id='challenge_username' scope="row">{{username}}</th>
+                    <td id='challenge_points'>{{total}}</td>
                   </tr>
                  {% endfor %}
                 </tbody>
         </table>
+
+        
+
+        </div>
+
+        {% load staticfiles %}
+        
+
+        <script>
+
+          async function getDataTwo(){
+            let myDataTwo = await fetch('/challenges/returnAllUserChallenges');
+            let myDataCleanTwo = await myDataTwo.json();
+            let jsonAwaitTwo = await myDataCleanTwo
+            return(jsonAwaitTwo);} //will return a promise
+
+          // only show the chart if there is data for today
+          // else give the user a button to input data 
+
+          getDataTwo().then((data) => {
+            for (let challenge of data){
+
+              if ( challenge['id'] == "{{object.id}}"){
+                showChartTwo(challenge)
+              }
+            }
+            ;
+            })
+
+          function showChartTwo(data){
+
+
+            window.chart3 = new Highcharts.chart({
+            chart: {
+                backgroundColor:'#84ceeb',
+                renderTo: 'currentChallenge',
+                type: 'column',
+
+            },
+            title: {
+                text: `Challenge: ${data["challenge_info"]['title']}`
+            },
+            subtitle: {
+                text: `Start Date: ${data["challenge_info"]['startDate']}
+                        End Date: ${data["challenge_info"]['endDate']}`,
+            style: {
+            fontFamily: 'monospace',
+            color: "black"
+        }
+            },
+            xAxis: {
+                categories: data['data']['userNames'],
+                crosshair: true,
+                labels: {
+            style: {
+                color: 'black'
+            }
+        } 
+            },
+            yAxis: {
+                min: 0,
+                title: {
+            text: "Points",
+            style: {
+                fontFamily: 'monospace',
+                color: "black"
+            }
+        },
+        labels: {
+            style: {
+                color: 'black'
+            }
+        } 
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px"></span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                    '<td style="padding:0"><b>{point.y:.1f} points</b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            series: [{
+                color: '#8860D0',
+                name: `${data["challenge_info"]['field']}`,
+                data: data['data']['points']
+
+            }]
+            });} 
+            
+
+
+  
+          </script>
+  
+        
 
       </div>
 

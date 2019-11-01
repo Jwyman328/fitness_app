@@ -1,9 +1,9 @@
 import datetime, time
-
+from datetime import timedelta
 from django.shortcuts import render
-from django.http.response import HttpResponse
+from django.http.response import HttpResponse, JsonResponse
 from django.urls import reverse
-from django.views.generic import TemplateView, CreateView, ListView, DetailView, UpdateView, DeleteView
+from django.views.generic import TemplateView, CreateView, ListView, DetailView, UpdateView, DeleteView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Sum
 from django.contrib import messages
@@ -13,7 +13,89 @@ from .models import Point_model, Point_goals
 from .forms import Point_goals_form, Health_input_form
 from users.models import My_custom_user
 
+from django.core.serializers import serialize
+from django.forms.models import model_to_dict
+
 # Create your views here.
+
+class UserHomePage(LoginRequiredMixin, TemplateView):
+    template_name = 'userHomePage.html' #'challengeChartsLoopTest.html'  
+
+def returnTodayJsonPoints(request):
+    # this is the user i want request.user.id 
+    current_date = datetime.datetime.today().strftime('%Y-%m-%d')
+    array_of_models = Point_model.objects.filter(user=request.user.id).filter(date=current_date)
+
+    list_of_jsonableDicts = []
+    for healthData in array_of_models:
+        heatlh_data_jsonable = model_to_dict(healthData)
+        list_of_jsonableDicts.append(heatlh_data_jsonable)
+
+    return JsonResponse(list_of_jsonableDicts, safe=False) # safe is false in order to send a list of dictionaries
+
+def returnPendingInvitations(request):
+    # this is the user i want request.user.id 
+    current_user_obj = request.user
+    all_invitations_status_objects = current_user_obj.invitation_status_set.filter(status='idle')
+
+    list_of_jsonableDicts = []
+    for pendingInvitation in all_invitations_status_objects:
+        pendingInvitationDict = model_to_dict(pendingInvitation)
+        list_of_jsonableDicts.append(pendingInvitationDict)
+
+    return JsonResponse(list_of_jsonableDicts, safe=False) # safe is false in order to send a list of dictionaries
+
+
+def jsonPastThirtyDays(request):
+    """return point data for past 30 days of this user"""
+    thirtyDaysAgo = datetime.date.today().isoformat()   
+    startDate = (datetime.date.today()-timedelta(days=31)).isoformat()
+    past_thirtyDay_models = Point_model.objects.filter(user=request.user.id).filter(date__gte= startDate)
+    allDatesPastThirtyDays = []    # i want an array for 31 days that containts just the point total
+
+    for x in range(31):
+        aSingleDate = [(datetime.date.today()-timedelta(days=x)).isoformat(),0]
+        allDatesPastThirtyDays.append(aSingleDate)
+    
+    for pointModel in past_thirtyDay_models:
+        pointTotal = pointModel.total_points
+        date = pointModel.date
+        for datePointPair in allDatesPastThirtyDays: # will return [date,0]
+            if str(date) == str(datePointPair[0]):
+                datePointPair[1] = pointTotal
+    
+    onlyPointValues = [pointValue for date, pointValue in allDatesPastThirtyDays ]
+    onlyDates = [str(date) for date, pointValue in allDatesPastThirtyDays ]
+    onlyDates.reverse()
+    onlyPointValues.reverse()
+   
+    list_of_jsonableDicts = [{'startDate':startDate.split('-')}, {'pointList':onlyPointValues}, {'onlyDates': onlyDates}]
+    
+    return JsonResponse(list_of_jsonableDicts, safe=False)
+
+def returnAllUserDailyJson(request):
+        """return all user point models in json form """
+        userPointModels = Point_model.objects.filter(user=request.user)
+        list_of_jsonableDicts = []
+        for pointData in userPointModels:
+            pointModel_data_jsonable = model_to_dict(pointData)
+            list_of_jsonableDicts.append(pointModel_data_jsonable)
+        
+        sorted_date = sorted(list_of_jsonableDicts, key=lambda x: x['date'])
+        
+        return JsonResponse(sorted_date, safe=False)
+
+def returnAllUserDailyActivityInputJson(request):
+        """return all user point models in json form """
+        userPointModels = User_point_input_model.objects.filter(user=request.user)
+        list_of_jsonableDicts = []
+        for pointData in userPointModels:
+            pointModel_data_jsonable = model_to_dict(pointData)
+            list_of_jsonableDicts.append(pointModel_data_jsonable)
+        
+        sorted_date = sorted(list_of_jsonableDicts, key=lambda x: x['date'])
+        
+        return JsonResponse(sorted_date, safe=False)
 
 
 class Homepage_view(LoginRequiredMixin, ListView):
@@ -23,17 +105,7 @@ class Homepage_view(LoginRequiredMixin, ListView):
     queryset = User_point_input_model.objects.all()
 
     # check if there are any pending messages 
-    def unanswered_challenge_invitations(self):
-        """Check for challenge invitations, if found, create and send a message."""
-        current_user_obj = self.request.user
-        all_invitations_status_objects = (
-            current_user_obj.invitation_status_set.filter(status = 'idle'))
-        if all_invitations_status_objects:
-            messages.add_message(self.request, messages.INFO,
-                                """Pending Invitation, to accept or reject go
-                                 to Challenges -> Pending invitations""")
-        
-            
+    
 class Daily_points_date_list(LoginRequiredMixin, ListView):
     """List of users health data points."""
     template_name = 'daily_points_date_list.html'
@@ -44,15 +116,6 @@ class Daily_points_date_list(LoginRequiredMixin, ListView):
         ordered_user_data = Point_model.objects.filter(user=self.request.user)
         order_date_data = ordered_user_data.order_by('-date')
         return order_date_data
-
-    def unanswered_challenge_invitations(self):
-        """Check for challenge invitations,if found, create and send a message"""
-        current_user_obj = self.request.user
-        all_invitations_status_objects = current_user_obj.invitation_status_set.filter(status='idle')
-        if all_invitations_status_objects:
-            messages.add_message(self.request, messages.INFO,
-                                """Pending Invitation, to accept or 
-                                reject go to Challenges -> Pending invitations""")
 
             
 class Health_data_input(LoginRequiredMixin, CreateView):
@@ -83,16 +146,10 @@ class Health_data_input(LoginRequiredMixin, CreateView):
         """
 
         pk_value = int(self.object.pk) # get newly created health model obj pk
-        return reverse('daily_point_graph', kwargs={'pk' : pk_value}) 
-
-    def unanswered_challenge_invitations(self):
-        """Check for challenge invitations,if found, create and send a message"""
-        current_user_obj = self.request.user
-        all_invitations_status_objects = current_user_obj.invitation_status_set.filter(status='idle')
-        if all_invitations_status_objects:
-            messages.add_message(self.request, messages.INFO,
-                                """Pending Invitation, to accept or 
-                                 reject go to Challenges -> Pending invitations""")
+        
+        related_point_model = Point_model.objects.filter(one_to_one_workout_id = pk_value) # get newly create health model obj foriegn key point model pk
+        related_point_model = related_point_model[0]
+        return reverse('daily_point_graph', kwargs={'pk' : related_point_model.id}) 
 
             
 class Update_health_data_input(LoginRequiredMixin, UpdateView):
@@ -162,7 +219,10 @@ class Update_health_data_input(LoginRequiredMixin, UpdateView):
                 # before th model is update i need to acess the older data 
                 current_user_updateable_version = My_custom_user.objects.filter(id=self.request.user.id) # filter for the current user in updateable query format
                 current_user = My_custom_user.objects.get(id=self.request.user.id) 
-                current_model_in_point_version = Point_model.objects.get(id=self.object.id)
+    
+                current_model_in_point_version = Point_model.objects.filter(one_to_one_workout_id=self.object.id) #changed
+                current_model_in_point_version = current_model_in_point_version[0]
+                #current_model_in_point_version = Point_model.objects.get(id=self.object.id)
                 
                 current_point_sum = current_user.total_points # former total points for the user
                 former_input_of_total_points_for_this_date = current_model_in_point_version.total_points # incorrect this got the new points amount
@@ -217,19 +277,13 @@ class Update_health_data_input(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         """Get the health input model's pk and return the user to the corresponding point model graph url. """
-        pk_value = int(self.object.pk)  # there is a current difference of 16 between the User_point_input_model and Point Model pks
-        return reverse('daily_point_graph', kwargs={'pk' : pk_value}) # this object pk will mimic the Point_model pk, they should always be equal, if not, this fails 
+        pk_value = int(self.object.pk) # get newly created health model obj pk
+        related_point_model = Point_model.objects.filter(one_to_one_workout_id = pk_value) # get newly create health model obj foriegn key point model pk
+        related_point_model = related_point_model[0]
 
-    def unanswered_challenge_invitations(self):
-        """Check for challenge invitations,if found, create and send a message"""
-        current_user_obj = self.request.user
-        #all_invitations = current_user_obj.Invitation.all()  # without the set
-        all_invitations_status_objects = current_user_obj.invitation_status_set.filter(status='idle')
-        #all_invitations = current_user_obj.invitation_to_challenge_set.all()
-        if all_invitations_status_objects:
-            messages.add_message(self.request, messages.INFO, 
-                                """Pending Invitation, to accept or reject
-                                  go to Challenges -> Pending invitations""")
+        print(related_point_model)
+        return reverse('daily_point_graph', kwargs={'pk' : related_point_model.id}) # this object pk will mimic the Point_model pk, they should always be equal, if not, this fails 
+
 
             
 class All_time_leaderboard_view(LoginRequiredMixin, ListView):
@@ -243,45 +297,13 @@ class All_time_leaderboard_view(LoginRequiredMixin, ListView):
         most_points_order = My_custom_user.objects.order_by('-total_points')
         return most_points_order
 
-    def unanswered_challenge_invitations(self):
-        """Check for challenge invitations,if found, create and send a message"""
-        current_user_obj = self.request.user
-        #all_invitations = current_user_obj.Invitation.all()  # without the set
-        all_invitations_status_objects = current_user_obj.invitation_status_set.filter(status='idle')
-        #all_invitations = current_user_obj.invitation_to_challenge_set.all()
-        if all_invitations_status_objects:
-            messages.add_message(self.request, messages.INFO, 
-                                 """Pending Invitation, to accept or 
-                                  reject go to Challenges -> Pending invitations""")
-
             
 class How_to_view(TemplateView):
     """A simple tutorial page, showing the viewer the function of the entire website."""
     template_name = "how_to.html"
-
-    def unanswered_challenge_invitations(self):
-        """Check for challenge invitations,if found, create and send a message"""
-        current_user_obj = self.request.user
-        #all_invitations = current_user_obj.Invitation.all()  # without the set
-        all_invitations_status_objects = current_user_obj.invitation_status_set.filter(status='idle')
-        #all_invitations = current_user_obj.invitation_to_challenge_set.all()
-        if all_invitations_status_objects:
-            messages.add_message(self.request, messages.INFO, 
-                                """Pending Invitation, to accept or reject
-                                 go to Challenges -> Pending invitations""")
 
 
 class Rules_view(TemplateView):
     """A page showing the scoring rules for converting health data input into points."""
     template_name = "rules.html"
 
-    def unanswered_challenge_invitations(self):
-        """Check for challenge invitations,if found, create and send a message"""
-        current_user_obj = self.request.user
-        #all_invitations = current_user_obj.Invitation.all()  # without the set
-        all_invitations_status_objects = current_user_obj.invitation_status_set.filter(status='idle')
-        #all_invitations = current_user_obj.invitation_to_challenge_set.all()
-        if all_invitations_status_objects:
-            messages.add_message(self.request, messages.INFO, 
-                                 """Pending Invitation, to accept or reject 
-                                 go to Challenges -> Pending invitations""")

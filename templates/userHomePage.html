@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %} 
+{% block content %}
+<head>
+        <meta charset="utf-8">
+        <title>Django Highcharts Example</title>
+</head>
+<body>
+        
+              
+        <div class='row'>
+                <div class="col-10 col-sm-10 col-md-2 mt-4 mx-auto" style="display:block">
+
+                        <div class="row mb-2 text-center ml-md-2 my-md-4" >
+                                <a class="btn btn-block btn-success btn-lg" style='border-radius: 500px; padding: 10px 20px' href="{% url 'Health_data_input' %}" role="button">Input Points</a>
+                        </div>
+                        <div id='updateTodayPoints' class="row mb-2 ml-md-2 my-md-4 text-center" style= "display:None" >
+                                        <a class="btn btn-block btn-dark btn-lg" style='border-radius: 500px; padding: 10px 20px' role="button">Update Today</a>
+                                </div>
+
+                        <div class="row my-2  text-center ml-md-2 my-md-4">
+                                <a class="btn btn-block btn-warning btn-lg " style='border-radius: 500px; padding: 10px 20px' href="{% url 'create_a_challenge' %}" role="button">Start Challenge </a>
+                        </div>
+                        <div class="row my-2  text-center ml-md-2 my-md-4">
+                                <a class="btn btn-danger btn-lg btn-block " style='border-radius: 500px; padding: 10px 20px' href="{% url 'set_goal' %}" role="button">Set Goal </a>
+                        </div>
+
+                </div>
+              
+       
+                <div class='col-12 col-md-5  my-2' id='divLandingTodaysPoints' style="height: 400px; border-style:none; border-collapse: collapse; " ></div>
+
+                <div  class='col-12 col-md-5  my-2' id='pastThirtyDays' style="height: 400px; border-style:none; border-collapse: collapse;"></div>
+
+                <div class='col-12 col-md-12 my-2' id='challenge0' style="height: 400px; border-style:none; border-collapse: collapse; "  ></div>
+                
+                <div class='col-12 col-md-12 my-2' id='challenge1'  style="height: 400px; border-style:none; border-collapse: collapse; " ></div>
+
+        </div>
+
+
+
+{% load staticfiles %}
+<script src="{% static 'js/updateTodayPointsButton.js' %}"> </script> 
+<script src="{% static 'js/currentDateuserHomePageGraph.js' %}"> </script> 
+<script src="{% static 'js/pastThirtyDaysHomePageGraph.js' %}"> </script> 
+<script src="{% static 'js/challengeChartsLoopTests.js' %}"> </script> 
+<script src="{% static 'js/checkPendingInvitations.js' %}"> </script> 
+<!--<script src="{% static 'js/currentChallengesGraphs.js' %}"> </script> -->
+
+
+
+
+{% endblock %}

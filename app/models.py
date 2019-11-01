@@ -20,6 +20,7 @@ class User_point_input_model(models.Model):
         date(datefield): the date of the health actions
         Hours_of_sleep(int): the hours of sleep
         water_100oz(Boolean): True,if 100oz of water was drank 
+        clean_eating(Boolean): True,if clean ate
         workout_intensity(int): value of 1-4 based on intensity of workout
         workout_amount_of_time(int): value in minutes of workout time
         steps(int): amount of total steps
@@ -99,7 +100,7 @@ class User_point_input_model(models.Model):
                 water_points=water_points, workout_points=workout_points,
                 one_to_one_workout=self, total_points=total_points,
                 clean_eating_points=clean_eating_points,
-                user=user, daily_point_goal=point_goal )
+                user=user, daily_point_goal=point_goal,step_points=step_points ) 
         health_points_object.save()
     
     def update_points(self):
@@ -249,8 +250,6 @@ class Point_model(models.Model):
             self.update_total_points_for_goal()
             self.update_total_points_for_user()
 
-
-
 class Point_goals(models.Model):
     """A daily point total goal for a spanned time,start date - end date.
     
@@ -266,6 +265,15 @@ class Point_goals(models.Model):
             that exists between goal_start_date and goal_end_date
 
     """
+    goal_health_field_choices = [
+        ('sleep_points', 'Sleep'),('water_points', 'Water'), 
+        ('clean_eating_points', 'Clean Eating'), ('step_points', 'Steps'),
+        ('total_points', 'Total Points'),('workout_points', 'Workout')]
+
+    goal_metric_choices = [
+        ('activityMetric', 'Activity Metric'), ('total_points', 'Points')
+    ]
+    
     user = models.ForeignKey(
             settings.AUTH_USER_MODEL, on_delete = models.CASCADE,
             null = True, blank=True ) 
@@ -274,13 +282,21 @@ class Point_goals(models.Model):
     goal_end_date = models.DateField(
             default=now, editable=True, help_text='year-month-day')
     point_goal = models.PositiveIntegerField(
-            default=50, help_text='Set Daily Point Goal')
+            default=0)
     goal_accomplished = models.TextField(
             default='no', null=True, blank=True)
     points_needed_for_goal_achieved = models.PositiveIntegerField(
             default=1, null=True, blank=True)
     current_point_total_input = models.PositiveIntegerField(
             default=0, null=True, blank=True)
+    goal_health_field = models.CharField(
+        max_length=10000, choices=goal_health_field_choices, default='total_points')
+    
+    goal_metric_field = models.CharField(
+        max_length=10000, choices=goal_metric_choices, default='total_points',
+        help_text='Activity Metrics: Sleep = Hours, Water = 100oz, Clean Eating = 24hrs, Steps = Steps, Workout = Minutes'
+       )
+    
 
     def points_needed_to_reach_goal(self):
         """Calculate and update the points needed to acomplish this goal.
@@ -336,7 +352,8 @@ class Point_goals(models.Model):
          """
         date_conflict = False
         for obj in Point_goals.objects.filter(user=self.user):
-            if self.goal_start_date >= obj.goal_start_date and self.goal_start_date <= obj.goal_end_date: # if the start date is inside preexisting goal
+            if (self.goal_start_date >= obj.goal_start_date and self.goal_start_date <= obj.goal_end_date
+               and self.goal_metric_field == obj.goal_metric_field and self.goal_health_field == obj.goal_health_field ): # if the start date with same heatlh and metric field is inside preexisting goal
                 date_conflict = True
             else:
                 pass

@@ -6,10 +6,27 @@
 
 
 {% block content %}
-<p style="color:white">{{view.unanswered_challenge_invitations}}</p> 
+<div class='row-12'>
+        <!-- As a heading -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+              <a class="navbar-brand" href="{% url 'general_results' %}">Graphs</a> <!-- this will be this page, showing graphs-->
+              <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+
+              <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                  <a class="nav-item nav-link" href="{% url 'daily_monthly_points_list' %}">Data Log</a>
+                </div>
+              </div>
+            </nav>
+</div>
 
 <div class = 'container'>
-        <h1> Update input for {{object.date}}</h1>
+        <div class="col-12 text-center">
+                <h1 class="no-magellan" style="margin: 30px">Update input for {{object.date}}</h1>
+            </div>
+   
         <div class = 'row'>
             <div class = col>
                     <form method = 'post'> {% csrf_token %}
