@@ -16,6 +16,7 @@ django-selenium-login = "*"
 whitenoise = "*"
 psycopg2-binary = "*"
 django-heroku = "*"
+dj-database-url = "*"
 
 [requires]
 python_version = "3.7"
