@@ -11,6 +11,8 @@ django-auto-one-to-one = "*"
 django-bootstrap4 = "*"
 django-crispy-forms = "*"
 django = "*"
+chromedriver = "*"
+django-selenium-login = "*"
 
 [requires]
 python_version = "3.7"
