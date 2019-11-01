@@ -82,9 +82,16 @@ WSGI_APPLICATION = 'papaginos.wsgi.application'
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        
+
+    "default": {
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": "[Jwyman]",
+        "USER": "[Jwyman]",
+        "PASSWORD": "",
+        "HOST": "localhost",
+        "PORT": "",
     }
+
     
     #this is for local 
     """
