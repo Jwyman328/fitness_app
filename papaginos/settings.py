@@ -85,11 +85,11 @@ DATABASES = {
 
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": "[Jwyman]",
-        "USER": "[Jwyman]",
+        "NAME": "postgres",
+        "USER": "postgres",
         "PASSWORD": "",
         "HOST": "localhost",
-        "PORT": "",
+        "PORT": "5432",
     }}
 
     
@@ -100,6 +100,11 @@ DATABASES = {
                 #'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
             #}
            # }"""
+
+           #psycopg2 = "*"
+            #py-mysql2pgsql = "*"
+            #django-heroku = "*"
+            #psycopg2-binary = "*"
 
 
 
