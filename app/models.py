@@ -94,7 +94,8 @@ class User_point_input_model(models.Model):
         step_points = self.steps * .001
         total_points = (water_points + workout_points + sleep_points + 
                         clean_eating_points + step_points)              
-        point_goal = point_goal_for_this_date()
+        
+        point_goal = 0 #point_goal_for_this_date()
         health_points_object = Point_model.objects.create(
                 sleep_points=sleep_points, date=date,
                 water_points=water_points, workout_points=workout_points,
