@@ -4,8 +4,7 @@
 
 {% block content %}
 {% if object.user == user %}
-<p style="color:white">{{view.unanswered_challenge_invitations}}</p> 
-<div class = 'container'>
+ <div class = 'container'>
         <div class = 'row'>
             <div class = col>
                     <form method = 'post'> {% csrf_token %}
@@ -14,7 +13,7 @@
                                     <br>Startdate: {{object.goal_start_date}}
                                     , Enddate: {{object.goal_end_date}} ?</h3>
                            
-                           <input class = 'btn btn-danger' type='submit' value = 'Delete'> 
+                           <input id='delete' class = 'btn btn-danger' type='submit' value = 'Delete'> 
                     </form> 
             </div>
 

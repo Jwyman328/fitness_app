@@ -1,7 +1,7 @@
 import datetime, time
 
 from django.shortcuts import render
-from django.http.response import HttpResponse
+from django.http.response import HttpResponse, JsonResponse
 from django.urls import reverse
 from django.views.generic import TemplateView, CreateView, ListView, DetailView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -13,6 +13,8 @@ from app.models import User_point_input_model
 from app.models import Point_model, Point_goals
 from app.forms import Point_goals_form, Health_input_form
 from users.models import My_custom_user
+
+from django.forms.models import model_to_dict
 
 # Create your views here.
 
@@ -33,12 +35,7 @@ class Set_goals_view(LoginRequiredMixin, CreateView):
         form.instance.user = self.request.user
         return super().form_valid(form)
     
-    def unanswered_challenge_invitations(self):
-        """Check for challenge invitations,if found, create and send a message"""
-        current_user_obj = self.request.user
-        all_invitations_status_objects = current_user_obj.invitation_status_set.filter(status='idle')
-        if all_invitations_status_objects:
-            messages.add_message(self.request, messages.INFO, 'Pending Invitation, to accept or reject go to Challenges -> Pending invitations')
+    
 
      
 class See_goals_view(LoginRequiredMixin, ListView):
@@ -82,15 +79,6 @@ class See_goals_view(LoginRequiredMixin, ListView):
         past_goals = past_goals.order_by('-goal_end_date')
         return(past_goals)
 
-    def unanswered_challenge_invitations(self):
-        """Check for challenge invitations,if found, create and send a message"""
-        current_user_obj = self.request.user
-        all_invitations_status_objects = current_user_obj.invitation_status_set.filter(status='idle')
-        if all_invitations_status_objects:
-            messages.add_message(self.request, messages.INFO, 
-                """Pending Invitation, to accept or reject
-                 go to Challenges -> Pending invitations""")
-
 
 class Past_goals(LoginRequiredMixin, ListView):
     """Show all past user goals. """
@@ -112,13 +100,6 @@ class Past_goals(LoginRequiredMixin, ListView):
         past_goals = past_goals.order_by('-goal_end_date')
         return(past_goals)
 
-    def unanswered_challenge_invitations(self):
-        """Check for challenge invitations,if found, create and send a message"""
-        current_user_obj = self.request.user
-        all_invitations_status_objects = current_user_obj.invitation_status_set.filter(status='idle')
-        if all_invitations_status_objects:
-            messages.add_message(self.request, messages.INFO, 'Pending Invitation, to accept or reject go to Challenges -> Pending invitations')
-
 
 class Delete_goal(LoginRequiredMixin, DeleteView):
     """Allow user to delete a goal. """
@@ -136,13 +117,54 @@ class Delete_goal(LoginRequiredMixin, DeleteView):
         context.update({'user_goals' : user_goals})
         return context
 
-    def unanswered_challenge_invitations(self):
-        """Check for challenge invitations,if found, create and send a message"""
-        current_user_obj = self.request.user
-        all_invitations_status_objects = current_user_obj.invitation_status_set.filter(status='idle')
-        if all_invitations_status_objects:
-            messages.add_message(self.request, messages.INFO, 
-                """Pending Invitation, to accept or reject go to Challenges -> Pending invitations""")
+class specific_goal_graph(LoginRequiredMixin, DetailView):
+    """ return page that will include graph of each goal """
+    template_name = 'specific_goal_graph.html' 
+    #model = Point_model
+    queryset = Point_goals.objects.all()
 
-
+    def points(self):
+        """return a queryset of every point_object """
+        return Point_model.objects.all()
     
+    def goals(self):
+        """ Return all of the users goals."""
+        point_goal_ls =  Point_goals.objects.filter(user=self.request.user)
+        return point_goal_ls
+
+class GeneralGoals(LoginRequiredMixin, TemplateView):
+    template_name = 'general_goals.html'
+
+
+def returnAllGoalsDataJson(request):
+        """return all user goal models in json form """
+        userPointModels = Point_goals.objects.filter(user=request.user)
+        list_of_jsonableDicts = []
+        for pointData in userPointModels:
+            pointModel_data_jsonable = model_to_dict(pointData)
+            list_of_jsonableDicts.append(pointModel_data_jsonable)
+        
+        sorted_date = sorted(list_of_jsonableDicts, key=lambda x: x["goal_end_date"])
+        
+        return JsonResponse(sorted_date, safe=False)
+
+def returnCurrentGoals(request):
+        "return goals for user that are currently active, in json format"
+        current_user_obj = request.user
+        now_date = now()
+        #all_invitations = current_user_obj.Invitation.all()  # without the set
+        all__user_point_goal_objects = Point_goals.objects.filter(user=request.user)
+        current_goals = all__user_point_goal_objects.filter(goal_end_date__gte=now_date)
+        current_goals = current_goals.filter(goal_start_date__lte=now_date)
+        current_goals = current_goals.order_by('goal_end_date')
+        #all_invitations = current_user_obj.invitation_to_challenge_set.all()
+        #return(current_challenges[0].invitation_id)
+        # get a list of all challenges 
+        list_of_jsonableDicts = []
+        for pointData in current_goals:
+            pointModel_data_jsonable = model_to_dict(pointData)
+            list_of_jsonableDicts.append(pointModel_data_jsonable)
+        
+        sorted_date = sorted(list_of_jsonableDicts, key=lambda x: x["goal_end_date"])
+        
+        return JsonResponse(sorted_date, safe=False)

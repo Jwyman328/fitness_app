@@ -1,30 +1,64 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<p style="color:white">{{view.unanswered_challenge_invitations}}</p> 
-<div class = 'container'>
+<div class='row-12'>
+    <!-- As a heading -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <a class="navbar-brand" href="{% url 'GeneralGoals' %}">My Goals</a> <!-- this will be this page, showing graphs-->
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent2" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarSupportedContent2">
+              <ul class="navbar-nav mr-auto">
+                  <li class="nav-item" >
+                        <a id='create_challenge' class = "nav-link mx-1" href="{% url 'set_goal' %}">Create Goal</a>
+                </li>
+
+
+              </ul>
+                <ul class="navbar-nav ml-auto">
+                        <li class="nav-item" >
+                                <a id='create_challenge' class = "nav-link mx-1"href="{% url 'see_goals' %}">Current-Future Goals Log</a>
+                        </li>
+                        <li class="nav-item" >
+                              <a id='create_challenge' class = "nav-link mx-1" href="{% url 'past_goals'  %}">Past Goals Log</a>
+                      </li>
+
+
+                    </ul>
+
+          </div>
+      </nav>
+</div>  
+ <div class = 'container'>
+    <div class="col-12 text-center">
+        <h2 class="no-magellan" style="margin: 30px">Current Goals</h2>
+      </div>
 <table class="table table-hover">
-  <h1> Current Goals </h1>
+ 
         <thead>
           <tr>
-            <th scope="col">Total Point Goal</th>
-            <th scope="col">Daily Point Goal</th>
+            <th  scope="col">Total Point Goal</th>
+            <th  scope="col">Daily Point Goal</th>
             <th scope="col">Current Points</th>
             <th scope="col">Start Date</th>
-            <th scope="col">End Date</th>
-            <th scope="col">Delete</th>
+            <th  scope="col">End Date</th>
+            <th  scope="col">Delete</th>
+            <th  scope="col">Graph</th>
           </tr>
         </thead>
         <tbody>
           {% for points in view.goals %}
            
           <tr>
-            <th scope="row">{{points.points_needed_for_goal_achieved}}</th>
-            <td>{{points.point_goal}}</td>
-            <td>{{points.current_point_total_input}}</td>
-            <td>{{points.goal_start_date}}</td>
-            <td>{{points.goal_end_date}}</td>
-            <td> <a href = "{% url 'delete_goal' points.pk %}"> Delete </a> </td>
+            <th id='current_goal_total_point_goal' scope="row">{{points.points_needed_for_goal_achieved}}</th>
+            <td id='current_goal_daily_point_goal'>{{points.point_goal}}</td>
+            <td id='current_goal_current_points' >{{points.current_point_total_input}}</td>
+            <td id='current_goal_start_date'>{{points.goal_start_date}}</td>
+            <td id='current_goal_end_date'>{{points.goal_end_date}}</td>
+            <td id='current_goal_delete'> <a href = "{% url 'delete_goal' points.pk %}"> Delete </a> </td>
+            <td id='see_goal_graph'><a class="btn btn-outline-success" href = "{%url 'specific_goal_graph' points.pk %}"> See graph</a></td>
           </tr>
           {% endfor %}
         </tbody>
@@ -32,8 +66,10 @@
       <br>
       <br>
       <!-- future goals  -->
+      <div class="col-12 text-center">
+          <h2 class="no-magellan" style="margin: 30px">Future Goals</h2>
+        </div>
       <table class="table table-hover">
-          <h2> Future Goals </h2>
                 <thead>
                     
                   <tr>
@@ -43,18 +79,21 @@
                     <th scope="col">Start Date</th>
                     <th scope="col">End Date</th>
                     <th scope="col">Delete</th>
+                    <th scope="col">Graph</th>
+
                   </tr>
                 </thead>
                 <tbody>
                   {% for points in view.future_goals %}
                    
                   <tr>
-                    <th scope="row">{{points.points_needed_for_goal_achieved}}</th>
-                    <td>{{points.point_goal}}</td>
-                    <td>{{points.current_point_total_input}}</td>
-                    <td>{{points.goal_start_date}}</td>
-                    <td>{{points.goal_end_date}}</td>
-                    <td> <a href = "{% url 'delete_goal' points.pk %}"> Delete </a> </td>
+                    <th id='future_goal_total_point_goal'  scope="row">{{points.points_needed_for_goal_achieved}}</th>
+                    <td id='future_goal_daily_point_goal'>{{points.point_goal}}</td>
+                    <td id='future_goal_future_points'>{{points.current_point_total_input}}</td>
+                    <td id='future_goal_start_date'>{{points.goal_start_date}}</td>
+                    <td id='future_goal_end_date'>{{points.goal_end_date}}</td>
+                    <td id='future_goal_delete'> <a href = "{% url 'delete_goal' points.pk %}"> Delete </a> </td>
+                    <td id='see_goal_graph_future'><a class="btn btn-outline-success" href = "{%url 'specific_goal_graph' points.pk %}"> See graph</a></td>
                   </tr>
                   {% endfor %}
                 </tbody>

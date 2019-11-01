@@ -10,6 +10,8 @@ from django.db.models import Sum
 
 from users.models import My_custom_user
 from users.models import My_custom_user
+
+
 # Create your models here.
 
 class Challenge(models.Model):

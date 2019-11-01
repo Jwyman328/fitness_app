@@ -19,7 +19,13 @@ from django.urls import path, include
 from . import views
 
 urlpatterns = [
-    path('', views.How_to_view.as_view(), name='home'),
+    #path('', views.How_to_view.as_view(), name='home'),
+    path('jsonData', views.returnTodayJsonPoints, name='jsonData'),
+    path('json30Past30Days', views.jsonPastThirtyDays, name='jsonPastThirtyDays'),
+    path('returnPendingInvitations', views.returnPendingInvitations, name='returnPendingInvitations'),
+    path('', views.UserHomePage.as_view(), name='userHomePage'),
+    path('returnAllUserDailyJson', views.returnAllUserDailyJson, name='returnAllUserDailyJson'),
+    path('returnAllUserDailyActivityInputJson', views.returnAllUserDailyActivityInputJson, name='returnAllUserDailyActivityInputJson'),
     path(
         'add_health_data', 
          views.Health_data_input.as_view(),

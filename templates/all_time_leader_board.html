@@ -1,8 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<p style="color:white">{{view.unanswered_challenge_invitations}}</p> 
-
+ 
 <div class = 'container'>
         <h1> All Time Leader Board</h1>
         <table class="table">
@@ -15,8 +14,8 @@
                 <tbody>
                   {% for user_obj in view.all_time_point_leaders_in_order %}
                   <tr>
-                    <th scope="row">{{user_obj.username}}</th>
-                    <td>{{user_obj.total_points}}</td>
+                    <th id='username' scope="row">{{user_obj.username}}</th>
+                    <td id='user_point_total'>{{user_obj.total_points}}</td>
                   </tr>
                  {% endfor %}
                 </tbody>

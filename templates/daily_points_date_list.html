@@ -1,9 +1,28 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<p style="color:white">{{view.unanswered_challenge_invitations}}</p> 
-<div class = 'container'>
-        <h1> Daily Point Data</h1>
+
+    <div class='row-12'>
+        <!-- As a heading -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+              <a class="navbar-brand" href="{% url 'general_results' %}">Graphs</a> <!-- this will be this page, showing graphs-->
+              <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+
+              <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                  <a class="nav-item nav-link" href="{% url 'daily_monthly_points_list' %}">Data Log</a>
+                </div>
+              </div>
+            </nav>
+    </div>
+    <div class = 'container'>
+
+        <div class="col-12 text-center">
+            <h2 class="no-magellan" style="margin: 30px">Daily Point Data</h2>
+          </div>
+    <div class='row-12'>
         <table class="table">
                 <thead>
                   <tr>
@@ -22,16 +41,16 @@
                 <tbody>
                   {% for point_obj in view.order_date_data %}
                   <tr>
-                    <th scope="row">{{point_obj.date}}</th>
-                    <td>{{point_obj.total_points}}</td>
-                    <td>{{point_obj.daily_point_goal}}</td>
-                    <td>{{point_obj.workout_points}}</td>
-                    <td>{{point_obj.sleep_points}}</td>
-                    <td>{{point_obj.water_points}}</td>
-                    <td>{{point_obj.step_points}}</td>
-                    <td>{{point_obj.clean_eating_points}}</td>
-                    <td><a href = "{%url 'update_health_data_input' point_obj.pk %}"> Update</a></td>
-                    <td><a href = "{%url 'daily_point_graph' point_obj.pk %}"> See graph</a></td>
+                    <th id='date' scope="row">{{point_obj.date}}</th>
+                    <td id='total_points'>{{point_obj.total_points}}</td>
+                    <td id='point_goal'>{{point_obj.daily_point_goal}}</td>
+                    <td id='workout_points'>{{point_obj.workout_points}}</td>
+                    <td id='sleep_points'>{{point_obj.sleep_points}}</td>
+                    <td id='water_points'>{{point_obj.water_points}}</td>
+                    <td id='step_points'>{{point_obj.step_points}}</td>
+                    <td id='clean_eating_points'>{{point_obj.clean_eating_points}}</td>
+                    <td id='update'><a class="btn btn-outline-primary" href = "{%url 'update_health_data_input' point_obj.one_to_one_workout_id %}"> Update</a></td>
+                    <td id='see_graph'><a class="btn btn-outline-success" href = "{%url 'daily_point_graph' point_obj.pk %}"> See graph</a></td>
                   </tr>
                  {% endfor %}
                 </tbody>

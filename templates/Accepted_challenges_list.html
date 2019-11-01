@@ -1,29 +1,64 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<p style="color:white">{{view.unanswered_challenge_invitations}}</p> 
-<div class = 'container'>
-  <h1>Current Challenges </h1> 
+<div class='row-12'>
+    <!-- As a heading -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <a class="navbar-brand" href="{% url 'GeneralChallenges' %}">My challenges</a> <!-- this will be this page, showing graphs-->
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent2" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarSupportedContent2">
+              <ul class="navbar-nav mr-auto">
+                  <li class="nav-item" >
+                          <a id='create_challenge' class = "nav-link mx-1" href= "{% url 'create_a_challenge' %}"> Create Challenge</a>
+                  </li>
+                  <li class="nav-item">
+                    <a id='pending_invitations' class = "nav-link mx-1" href= "{% url 'invitations_pending' %}"> Pending Invitations</a>
+                  </li>
+              </ul>
+                  <ul class="navbar-nav ml-auto">
+                          <li class="nav-item" >
+                                  <a id='create_challenge' class = "nav-link mx-1" href= "{% url 'past_accepted_challenges' %}"> Past Challenges Log</a>
+                          </li>
+                          <li class="nav-item">
+                            <a id='pending_invitations' class = "nav-link mx-1" href= "{% url 'accepted_challenges_list' %}"> Current-Future Challenges Log</a>
+                          </li>
+
+                      </ul>
+
+
+                  
+          </div>
+      </nav>
+</div>
+
+ <div class = 'container'>
+    <div class="col-12 text-center">
+        <h2 class="no-magellan" style="margin: 30px">Current Challenges</h2>
+      </div>
+
         <table class="table">
                 <thead>
                   <tr>
-                    <th scope="col">End Date</th>
-                    <th scope="col">Start Date</th>
-                    <th scope="col">Title</th>
-                    <th scope="col"> Challenge Category</th>
-                    <th scope="col">Created by </th>
-                    <th scope="col"> Leader Board</th>
+                    <th style ="word-break: break-word" scope="col">End</th>
+                    <th style ="word-break: break-word" scope="col">Start</th>
+                    <th style ="word-break: break-word" scope="col">Title</th>
+                    <th style ="word-break: break-word" scope="col">Category</th>
+                    <!--<th style ="word-break: break-word" scope="col">Created by </th>-->
+                    <th style ="word-break: break-word" scope="col">Graph</th>
                   </tr>
                 </thead>
                 <tbody>
                   {% for invitation_obj in view.accepted_challenge_invitations %}
                   <tr>
-                    <th scope="row">{{invitation_obj.invitation.end_date}}</th>   
-                    <td>{{invitation_obj.invitation.start_date}}</td> 
-                    <td>{{invitation_obj.invitation.title}}</td>
-                    <td>{{invitation_obj.invitation.challenge_health_field}}</td> 
-                    <td>{{invitation_obj.invitation.username_of_invitor}}</td> <!-- modify this to show username -->
-                    <td><a href = "{% url 'Challenge_leaderboard' invitation_obj.invitation_id  %}"> LeaderBoard</a></td>
+                    <th style ="word-break: break-word" id='end_date' scope="row">{{invitation_obj.invitation.end_date}}</th>   
+                    <td style ="word-break: break-word" id='start_date'>{{invitation_obj.invitation.start_date}}</td> 
+                    <td style ="word-break: break-word" id='challenge_title'>{{invitation_obj.invitation.title}}</td>
+                    <td style ="word-break: break-word" id='challenge_field'>{{invitation_obj.invitation.challenge_health_field}}</td> 
+                    <!--<td style ="word-break: break-word" id='creator'>{{invitation_obj.invitation.username_of_invitor}}</td>--> <!-- modify this to show username -->
+                    <td style ="word-break: break-word" id='challenge_leaderboard'><a class = "btn btn-outline-primary" href = "{% url 'Challenge_leaderboard' invitation_obj.invitation_id  %}"> Results</a></td>
                   </tr>
                  {% endfor %}
                 </tbody>
@@ -31,27 +66,30 @@
         <br>
         <br>
                 <!-- future challenges -->
-                <h2> Future Challenges</h2>
+                <div class="col-12 text-center">
+                    <h2 class="no-magellan" style="margin: 30px">Future Challenges</h2>
+                  </div>
+              
                 <table class="table">
                     <thead>
                       <tr>
-                        <th scope="col">End Date</th>
-                        <th scope="col">Start Date</th>
-                        <th scope="col">Title</th>
-                        <th scope="col"> Challenge Category</th>
-                        <th scope="col">Created by </th>
-                        <th scope="col"> Leader Board</th>
+                        <th style ="word-break: break-word" scope="col">End</th>
+                        <th style ="word-break: break-word" scope="col">Start</th>
+                        <th style ="word-break: break-word" scope="col">Title</th>
+                        <th style ="word-break: break-word" scope="col">Category</th>
+                        <!--<th scope="col">Created by </th>-->
+                        <th scope="col">Graph</th>
                       </tr>
                     </thead>
                     <tbody>
                       {% for invitation_obj in view.future_challenge_data %}
                       <tr>
-                        <th scope="row">{{invitation_obj.invitation.end_date}}</th>
-                        <td>{{invitation_obj.invitation.start_date}}</td> 
-                        <td>{{invitation_obj.invitation.title}}</td>
-                        <td>{{invitation_obj.invitation.challenge_health_field}}</td> 
-                        <td>{{invitation_obj.invitation.username_of_invitor}}</td> <!-- modify this to show username -->
-                        <td><a href = "{% url 'Challenge_leaderboard' invitation_obj.invitation_id  %}"> LeaderBoard</a></td>
+                        <th style ="word-break: break-word" scope="row">{{invitation_obj.invitation.end_date}}</th>
+                        <td style ="word-break: break-word">{{invitation_obj.invitation.start_date}}</td> 
+                        <td style ="word-break: break-word">{{invitation_obj.invitation.title}}</td>
+                        <td style ="word-break: break-word">{{invitation_obj.invitation.challenge_health_field}}</td> 
+                        <td style ="word-break: break-word">{{invitation_obj.invitation.username_of_invitor}}</td> <!-- modify this to show username -->
+                        <td style ="word-break: break-word"><a class = "btn btn-outline-primary" href = "{% url 'Challenge_leaderboard' invitation_obj.invitation_id  %}"> Results</a></td>
                       </tr>
                      {% endfor %}
                     </tbody>

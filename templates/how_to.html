@@ -3,46 +3,37 @@
 
 {% block content %}
 {% if user.is_authenticated %}
-<p style="color:white">{{view.unanswered_challenge_invitations}}</li> 
+<p style="color:#c1c8e4"">{{view.unanswered_challenge_invitations}}</li> 
 {% endif %}
 <div class = 'container'>
 
         <h1> How to: Fitness Challenge</h1>
         <br>
 
-        <h3> Step 1: Create a User: <a  href="{% url 'signup' %}">Signup</a>  </h3>
+        <h3> Step 1: Create a User: <a class="btn btn-outline-success"  href="{% url 'signup' %}"> Signup</a>  </h3>
         <br>
        
-        <h3> Step 2: Compete against expectations:<a href="{% url 'set_goal' %}"> Set Goals</a>  </h3>
+        <h3> Step 2: Compete against expectations: <a class="btn btn-outline-success" href="{% url 'set_goal' %}"> Create Goal</a>  </h3>
         <ul>
         <li> Create daily point goals to see if you can beat your expectations </li>
         <br>
         </ul>
         
-        <h3> Step 3: Start Tracking: <a  href="{% url 'Health_data_input' %}"> Input Data </a></h3>
+        <h3> Step 3: Start Tracking: <a class="btn btn-outline-success" href="{% url 'Health_data_input' %}"> Input Data </a></h3>
         <ul>
         <li> Input your health data to generate points, including sleeping hours, workout time, steps, water and more </li>
         <br>
         </ul>
 
         
-        <h3> Step 4: View Results:<a href= "{% url 'daily_monthly_points_list' %}"> Daily Table</a></h3>
+        <h3> Step 4: View Results: <a class="btn btn-outline-success" href= "{% url 'general_results' %}"> Interactive Graphs</a></h3>
         <ul>
-        <li> View your daily points generated in a table format or graph  </li>
-        <li> View your total point progress graph: <a  href= "{% url 'User_all_time_progress_graph' %}"> Total  Graph</a></li>
-        <li> View your daily point graph: <a  href= "{% url 'daily_points_graph' %}"> Daily  Graph</a></li>
+        <li> View your health data graphs, tables and statistics  </li>
         <br>
         </ul>
 
         
-        <h3> Step 5: Compete Against Others:<a href="{%url 'all_time_leaderboard' %}"> Leader Board</a></h3>
-        <ul>
-        <li> Check the Leader Board to see the rankings</li>
-        <br>
-        </ul>
-
-        
-        <h3> Step 6: Create and Compete in Challenges: <a href= "{% url 'create_a_challenge' %}"> Create Challenge</a></h3>
+        <h3> Step 5: Create and Compete in Challenges: <a class="btn btn-outline-success" href= "{% url 'create_a_challenge' %}"> Create Challenge</a></h3>
         <ul>
         <li> Create a challenge for any fitness category and Invite your friends to compete</li>
         <li> Accept challenge invitations from others: <a href= "{% url 'invitations_pending' %}"> Pending Invitations</a></li>
