@@ -27,7 +27,7 @@
                     <td style ="word-break: break-word" id='invitation_end_date'>{{invitation_obj.invitation.end_date}}</td> 
                     <td style ="word-break: break-word" id='invitation_challenge_category'>{{invitation_obj.invitation.challenge_health_field}}</td> 
                     <td style ="word-break: break-word" id='invitation_creator'>{{invitation_obj.invitation.username_of_invitor}}</td> <!-- modify this to show username -->
-                    <td class="btn btn-outline-success" style ="word-break: break-word" id='accept_deny_invitation'><a href = "{% url 'update_invitation_status' invitation_obj.pk %}"> Respond </a></td>
+                    <td style ="word-break: break-word" id='accept_deny_invitation'><a class= "btn btn-outline-success"  href = "{% url 'update_invitation_status' invitation_obj.pk %}"> Respond </a></td>
                   </tr>
                  {% endfor %}
                 </tbody>
