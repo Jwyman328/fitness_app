@@ -1,5 +1,9 @@
 
 {% extends 'goals_sub_nav.html' %}
+{% block head %}
+{% load static %}
+    <link href="{% static 'css/tables.css' %}" rel =stylesheet type='text/css'>
+{% endblock %}
 
 {% block subnav %}
  
@@ -11,11 +15,12 @@
               <table class="table table-hover">
                           <thead>
                             <tr>
-                              <th scope="col">Total Point Goal</th>
-                              <th scope="col">Daily Point Goal</th>
-                              <th scope="col">Current Points</th>
-                              <th scope="col">Start Date</th>
-                              <th scope="col">End Date</th>
+                              <!--<th scope="col">Total Point Goal</th>-->
+                              <th scope="col">Field</th>
+                              <th scope="col">Daily</th>
+                              <!--<th scope="col">Current Points</th>-->
+                              <th scope="col">Start</th>
+                              <th scope="col">End</th>
                               <th scope="col">Delete</th>
                               <th scope="col">Graph</th>
                             </tr>
@@ -23,13 +28,14 @@
                           <tbody>
                             {% for points in view.past_goals %}
                             <tr>
-                              <th id='past_goal_total_point_goal' scope="row">{{points.points_needed_for_goal_achieved}}</th>
+                              <!--<th id='past_goal_total_point_goal' scope="row">{{points.points_needed_for_goal_achieved}}</th>-->
+                              <td  id='current_goal_daily_point_goal'>{{points.convert_field_name_to_readable_field_name}}</td>
                               <td id='past_goal_daily_point_goal'>{{points.point_goal}}</td>
-                              <td id='past_goal_past_points'>{{points.current_point_total_input}}</td>
+                              <!--<td id='past_goal_past_points'>{{points.current_point_total_input}}</td>-->
                               <td id='past_goal_start_date'>{{points.goal_start_date}}</td>
                               <td id='past_goal_end_date'>{{points.goal_end_date}}</td>
                               <td id='past_goal_delete'> <a class="btn btn-outline-danger" href = "{% url 'delete_goal' points.pk %}"> Delete </a> </td>
-                              <td id='see_goal_graph'><a class="btn btn-outline-success" href = "{%url 'specific_goal_graph' points.pk %}"> See graph</a></td>
+                              <td id='see_goal_graph'><a class="btn btn-outline-success" href = "{%url 'specific_goal_graph' points.pk %}"> Graph</a></td>
                             </tr>
                             {% endfor %}
                           </tbody>

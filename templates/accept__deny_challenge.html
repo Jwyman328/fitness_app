@@ -1,4 +1,8 @@
 {% extends 'challenges_subnav.html' %}
+{% block head %}
+{% load static %}
+    <link href="{% static 'css/tables.css' %}" rel =stylesheet type='text/css'>
+{% endblock %}
 
 {% block subnav %}
 
@@ -10,24 +14,24 @@
         <table class="table">
                 <thead>
                   <tr>
-                    <th style ="word-break: break-word" scope="col">Title</th>
-                    <th style ="word-break: break-word" scope="col">Start</th>
-                    <th style ="word-break: break-word" scope="col">End</th>
-                    <th style ="word-break: break-word" scope="col"> Category</th>
-                    <th style ="word-break: break-word" scope="col">invited by</th>
-                    <th style ="word-break: break-word" scope="col">Accept/Reject</th>
+                    <!--<th  scope="col">Title</th>-->
+                    <th  scope="col">Start</th>
+                    <th  scope="col">End</th>
+                    <th  scope="col">Field</th>
+                    <th  scope="col">From</th>
+                    <th  scope="col">Respond</th>
 
                   </tr>
                 </thead>
                 <tbody>
                   {% for invitation_obj in view.unanswered_challenge_invitations_returned %}
                   <tr>
-                    <th style ="word-break: break-word" id='invitation_title' scope="row">{{invitation_obj.invitation.title}}</th>
-                    <td style ="word-break: break-word" id='invitation_start_date'>{{invitation_obj.invitation.start_date}}</td>
-                    <td style ="word-break: break-word" id='invitation_end_date'>{{invitation_obj.invitation.end_date}}</td> 
-                    <td style ="word-break: break-word" id='invitation_challenge_category'>{{invitation_obj.invitation.challenge_health_field}}</td> 
-                    <td style ="word-break: break-word" id='invitation_creator'>{{invitation_obj.invitation.username_of_invitor}}</td> <!-- modify this to show username -->
-                    <td style ="word-break: break-word" id='accept_deny_invitation'><a class= "btn btn-outline-success"  href = "{% url 'update_invitation_status' invitation_obj.pk %}"> Respond </a></td>
+                    <!--<th  id='invitation_title' scope="row">{{invitation_obj.invitation.title}}</th>-->
+                    <td  id='invitation_start_date'>{{invitation_obj.invitation.start_date}}</td>
+                    <td  id='invitation_end_date'>{{invitation_obj.invitation.end_date}}</td> 
+                    <td  id='invitation_challenge_category'>{{invitation_obj.invitation.convert_field_name_to_readable_field_name}}</td> 
+                    <td  id='invitation_creator'>{{invitation_obj.invitation.username_of_invitor}}</td> <!-- modify this to show username -->
+                    <td  id='accept_deny_invitation'><a class= "btn btn-outline-success"  href = "{% url 'update_invitation_status' invitation_obj.pk %}"> Respond </a></td>
                   </tr>
                  {% endfor %}
                 </tbody>

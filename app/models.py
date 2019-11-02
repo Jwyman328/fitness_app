@@ -95,7 +95,7 @@ class User_point_input_model(models.Model):
         total_points = (water_points + workout_points + sleep_points + 
                         clean_eating_points + step_points)              
         
-        point_goal = 0 #point_goal_for_this_date()
+        point_goal = point_goal_for_this_date()
         health_points_object = Point_model.objects.create(
                 sleep_points=sleep_points, date=date,
                 water_points=water_points, workout_points=workout_points,
@@ -343,6 +343,11 @@ class Point_goals(models.Model):
         current_goal_obj = Point_goals.objects.filter(id=self.id)
         current_goal_obj.update(
             current_point_total_input=int(current_sum_points_in_goal_date_range)  )
+
+    def convert_field_name_to_readable_field_name(self):
+        """return a more readable version of the goal_health_field"""
+        
+        return(dict(self.goal_health_field_choices).get(self.goal_health_field))
 
     def save(self, *args, **kwargs):
         """Save the current goal and after call corresponding functions

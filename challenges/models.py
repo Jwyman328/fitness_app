@@ -130,6 +130,11 @@ class Invitation_to_challenge(models.Model):
         this_invitation = Invitation_to_challenge.objects.get(id=self.id)
         this_invitation.Invitation.add(invitor_user_model_obj) 
 
+    def convert_field_name_to_readable_field_name(self):
+        """return a more readable version of the health_field"""
+        
+        return(dict(self.challenge_health_field_choices).get(self.challenge_health_field))
+
     def save(self, *args, **kwargs):
         """ save the invitation object,after create a corresponding challenge obj.
 

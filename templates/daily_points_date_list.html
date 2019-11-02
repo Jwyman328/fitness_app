@@ -1,5 +1,8 @@
 {% extends 'base.html' %}
-
+{% block head %}
+{% load static %}
+    <link href="{% static 'css/tables.css' %}" rel =stylesheet type='text/css'>
+{% endblock %}
 {% block content %}
 
     <div class='row-12'>
@@ -28,14 +31,14 @@
                   <tr>
                     <th scope="col">Date</th>
                     <th scope="col">Total </th>
-                    <th scope="col">Goal</th>
-                    <th scope="col">Workout</th>
+                    <th scope="col">Daily Goal</th>
+                    <!--<th scope="col">Workout</th>
                     <th scope="col">Sleep </th>
                     <th scope="col">Water</th>
                     <th scope="col">Step</th>
-                    <th scope="col">Clean Eating</th>
+                    <th scope="col">Clean Eating</th>-->
                     <th scope="col">Update</th>
-                    <th scope="col">See graph</th>
+                    <th scope="col">Graph</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -44,13 +47,13 @@
                     <th id='date' scope="row">{{point_obj.date}}</th>
                     <td id='total_points'>{{point_obj.total_points}}</td>
                     <td id='point_goal'>{{point_obj.daily_point_goal}}</td>
-                    <td id='workout_points'>{{point_obj.workout_points}}</td>
+                    <!--<td id='workout_points'>{{point_obj.workout_points}}</td>
                     <td id='sleep_points'>{{point_obj.sleep_points}}</td>
                     <td id='water_points'>{{point_obj.water_points}}</td>
                     <td id='step_points'>{{point_obj.step_points}}</td>
-                    <td id='clean_eating_points'>{{point_obj.clean_eating_points}}</td>
+                    <td id='clean_eating_points'>{{point_obj.clean_eating_points}}</td>-->
                     <td id='update'><a class="btn btn-outline-primary" href = "{%url 'update_health_data_input' point_obj.one_to_one_workout_id %}"> Update</a></td>
-                    <td id='see_graph'><a class="btn btn-outline-success" href = "{%url 'daily_point_graph' point_obj.pk %}"> See graph</a></td>
+                    <td id='see_graph'><a class="btn btn-outline-success" href = "{%url 'daily_point_graph' point_obj.pk %}">Graph</a></td>
                   </tr>
                  {% endfor %}
                 </tbody>
