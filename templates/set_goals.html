@@ -1,42 +1,11 @@
-{% extends 'base.html' %}
+{% extends 'goals_sub_nav.html' %}
 
 {% load crispy_forms_field %}
 {% load crispy_forms_tags %}
 
 
 
-{% block content %}
-<div class='row-12'>
-        <!-- As a heading -->
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-              <a class="navbar-brand" href="{% url 'GeneralGoals' %}">My Goals</a> <!-- this will be this page, showing graphs-->
-              <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent2" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-              </button>
-
-              <div class="collapse navbar-collapse" id="navbarSupportedContent2">
-                    <ul class="navbar-nav mr-auto">
-                            <li class="nav-item" >
-                                  <a id='create_challenge' class = "nav-link mx-1" href="{% url 'set_goal' %}">Create Goal</a>
-                          </li>
-
-
-                        </ul>
-                        
-                    <ul class="navbar-nav ml-auto">
-                            <li class="nav-item" >
-                                    <a id='create_challenge' class = "nav-link mx-1"href="{% url 'see_goals' %}">Current-Future Goals Log</a>
-                            </li>
-                            <li class="nav-item" >
-                                  <a id='create_challenge' class = "nav-link mx-1" href="{% url 'past_goals'  %}">Past Goals Log</a>
-                          </li>
-
-
-                        </ul>
-
-              </div>
-          </nav>
-</div>  
+{% block subnav %}
 
  <div class = 'container'>
         <div class = 'row'>
