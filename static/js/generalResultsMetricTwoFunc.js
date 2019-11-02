@@ -211,12 +211,18 @@
       let totalP = document.getElementById('total');
       let totalAmountTitle = document.getElementById('totalAmount');
 
-  
       maxP.textContent =  `${maxPoints} ${metricName} on ${maxDate}` ;
       maxTitle.textContent = `Max ${metricName}`;
       minP.textContent = `${minPoints} ${metricName} on ${minDate} `;
       minTitle.textContent = `Min ${metricName}`;
-      avgTitle.textContent = `Avg ${typeOfPoints} ${metricName}`;
+
+      // avtTitle could say "steps steps" for metricName steps and typeofPoints steps
+      if (`${typeOfPoints} ${metricName}` == 'Steps Steps'){
+        avgTitle.textContent = `Avg ${typeOfPoints}`; // make it only say 'steps' not 'steps steps'
+      }else{
+        avgTitle.textContent = `Avg ${typeOfPoints} ${metricName}`;
+      }
+
       avgBody.textContent = Math.round(AvgPoints);
       totalP.textContent = totalPoints;
       totalAmountTitle.textContent = `Total ${metricName}`;
