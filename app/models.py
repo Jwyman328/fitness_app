@@ -169,7 +169,7 @@ class Point_model(models.Model):
             this date and before this date.
 
     """
-    sleep_points = models.PositiveIntegerField(default=0)
+    sleep_points = models.FloatField(default=0)
     date = models.DateField(default=now, editable=True)
     water_points = models.PositiveIntegerField(default=0)
     workout_points = models.PositiveIntegerField(default=0)
