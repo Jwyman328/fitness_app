@@ -35,7 +35,7 @@ class User_point_input_model(models.Model):
                default=now, editable=True,
                help_text='yyyy-mm-dd')
 
-    Hours_of_sleep = models.FloatField(default=0)
+    Hours_of_sleep = models.FloatField(default=0) #accept decimals
     Water_100oz = models.BooleanField(default=False)
     clean_eating = models.BooleanField(default=False)
     workout_intensity = models.PositiveIntegerField(
