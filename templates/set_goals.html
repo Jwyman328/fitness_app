@@ -11,14 +11,14 @@
         <div class = 'row'>
 
                 <div class="col-12 text-center">
-                        <h2 class="no-magellan" style="margin: 30px">Create Personal Point Goal</h2>
+                        <h2 class="no-magellan" style="margin: 30px">Create Personal Goal</h2>
                       </div>
 
             <div class = col>
                     <form method = 'post'> {% csrf_token %}
                             {{form| crispy}}
                            
-                           <input class = 'btn btn-success' type='submit' value = 'Set'> 
+                           <input class = 'btn btn-success' type='submit' value = 'Set' style="margin-bottom: 25px;"> 
                     </form> 
             </div>
 
