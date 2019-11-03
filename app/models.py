@@ -33,7 +33,7 @@ class User_point_input_model(models.Model):
 
     date = models.DateField(
                default=now, editable=True,
-               help_text='year-month-day')
+               help_text='yyyy-mm-dd')
 
     Hours_of_sleep = models.PositiveIntegerField(default=0)
     Water_100oz = models.BooleanField(default=False)

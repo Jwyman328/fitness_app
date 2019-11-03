@@ -4,23 +4,24 @@
 {% if user.is_authenticated %}
  {% endif %}
     <div class = 'container'>
-        <div class = 'row align-items-center justify-content-center'></div>
-        <div class = 'col mr-auto ml-auto'>
-                <h2 id='rules_title' style="color : red"> How to Earn Points</h2>
-                <ul>
-                        <li> Clean Eating Points: Eat Clean the entire day, 10 points</li>
-                        
-                        <li> Sleep Points: Hours of Sleep * 3.3</li>
-                        
-                        <li> Workout Points: Workout intensity * (Workout minutes * .2) </li>
-                      
-                        <li> Water Points: 100 oz of water, 10 points</li>
-                     
-                        <li> Step Points: Steps * .001</li>
+        <div class = 'col-12 mr-auto ml-auto'>
+
+
+        <div class="card col-12 mr-auto ml-auto my-5 text-center">
+                <div class="card-header" style="color: red;">
+                  <h2>Scoring System</h2>
+                </div>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item">Clean Eating Points: Eat Clean the entire day, 10 points</li>
+                  <li class="list-group-item">Sleep Points: Hours of Sleep * 3.3</li>
+                  <li class="list-group-item">Workout Points: Workout intensity * (Workout minutes * .2)</li>
+                  <li class="list-group-item">Water Points: 100 oz of water, 10 points</li>
+                  <li class="list-group-item">Step Points: Steps * .001</li>
+
                 </ul>
-        </div>
+              </div>
 
     </div>
-
+    </div>
 
 {% endblock %}
