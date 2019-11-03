@@ -35,7 +35,7 @@ class User_point_input_model(models.Model):
                default=now, editable=True,
                help_text='yyyy-mm-dd')
 
-    Hours_of_sleep = models.DecimalField(default=0,max_digits=5, decimal_places=2) #accept decimals
+    Hours_of_sleep = models.PositiveIntegerField(default=0) #accept decimals
     Water_100oz = models.BooleanField(default=False)
     clean_eating = models.BooleanField(default=False)
     workout_intensity = models.PositiveIntegerField(
@@ -85,7 +85,7 @@ class User_point_input_model(models.Model):
                     pass
             return point_goal
                     
-        sleep_points = float(self.Hours_of_sleep) * 3.3
+        sleep_points = self.Hours_of_sleep * 3.3
         date = self.date
         user = self.user
         workout_points = self.workout_intensity * (self.workout_amount_of_time * .2)
@@ -169,7 +169,7 @@ class Point_model(models.Model):
             this date and before this date.
 
     """
-    sleep_points = models.FloatField(default=0)
+    sleep_points = models.PositiveIntegerField(default=0) #max_digits=5, decimal_places=2
     date = models.DateField(default=now, editable=True)
     water_points = models.PositiveIntegerField(default=0)
     workout_points = models.PositiveIntegerField(default=0)
