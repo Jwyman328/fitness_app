@@ -3,7 +3,7 @@ th {
 }
 
 td {
-    padding: 2px; font-size: 12px;
+    padding: 1px; font-size: 12px;
 }
 
 h2 {
@@ -11,6 +11,6 @@ h2 {
 }
 
 .btn {
-    font-size: 12px; padding: 2px;
+    font-size: 2px; padding: 2px;
 }
 

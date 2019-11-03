@@ -13,7 +13,7 @@
   </head>
   <body style="background-color: #c1c8e4">
       <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-          <a id='user_name_label' class="navbar-brand" href="/">{{user.username}}</a>
+          <a id='user_name_label' class="navbar-brand" href="/">Home</a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
           </button>
@@ -73,7 +73,7 @@
                 {% if user.is_authenticated %}
                 <li class="nav-item dropdown">
                     <a id='account' class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      Account
+                      Account: {{user.username}}
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                       <a id='logout' class = "dropdown-item" href= "{% url 'logout' %}">Logout</a>
