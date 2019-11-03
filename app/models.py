@@ -10,7 +10,7 @@ from django.db.models import Sum
 from users.models import My_custom_user
 from users.models import My_custom_user
 
-
+import decimal 
 # Create your models here.
 class User_point_input_model(models.Model):
     """Health Data in the total value of each specific catagory
@@ -35,7 +35,7 @@ class User_point_input_model(models.Model):
                default=now, editable=True,
                help_text='yyyy-mm-dd')
 
-    Hours_of_sleep = models.PositiveIntegerField(default=0)
+    Hours_of_sleep = models.FloatField(default=0)
     Water_100oz = models.BooleanField(default=False)
     clean_eating = models.BooleanField(default=False)
     workout_intensity = models.PositiveIntegerField(
