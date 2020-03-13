@@ -17,11 +17,16 @@
  <image src='imageDocs/inputPoints.png'  width=750 height=400 /> 
 
  <br></br>
- <h2>See your progress with Graphs </h2>
+ <h2>See your daily and monthly progress with Graphs </h2>
  
+ Daily Progress |  Monthly Progress     
+:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
+<image src='imageDocs/dailyPoints.png'  width=350 height=300 /> | <image src='imageDocs/monthGraph.png'  width=350 height=300 /> 
+
+ <h2>Use interactive graphs to see point or activity metrics </h2>
  Daily Progress |  Monthly Progress     |  Listen to the Meditation |  Complete the Meditation
 :-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
-<image src='imageDocs/dailyPoints.png'  width=350 height=300 /> | <image src='imageDocs/monthGraph.png'  width=350 height=300 /> | <image src='imageDocs/inputPoints.png'  width=350 height=300 /> | <image src='imageDocs/inputPoints.png'  width=350 height=300 /> 
+<image src='imageDocs/dailyPoints.png'  width=350 height=300 /> | <image src='imageDocs/monthGraph.png'  width=350 height=300 /> 
 
 
 
