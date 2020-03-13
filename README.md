@@ -21,10 +21,7 @@
  
  Daily Progress |  Monthly Progress     |  Listen to the Meditation |  Complete the Meditation
 :-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
-<image src='imageDocs/dailyPoints.png'  width=350 height=300 /> 
-| <image src='imageDocs/monthGraph.png'  width=350 height=300 /> 
- | <image src='imageDocs/inputPoints.png'  width=350 height=300 /> 
- | <image src='imageDocs/inputPoints.png'  width=350 height=300 /> 
+<image src='imageDocs/dailyPoints.png'  width=350 height=300 /> | <image src='imageDocs/monthGraph.png'  width=350 height=300 /> | <image src='imageDocs/inputPoints.png'  width=350 height=300 /> | <image src='imageDocs/inputPoints.png'  width=350 height=300 /> 
 
 
 
