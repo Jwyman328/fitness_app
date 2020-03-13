@@ -25,9 +25,9 @@
 
  <h2>Use interactive graphs to see point or activity metrics </h2>
  
- Daily Progress |  Monthly Progress     
+ Sleep Hour Progress over 60 days |  Total Points over 7 days    
 :-------------------------:|:-------------------------:
-<image src='imageDocs/interactiveGraphSleepActivityMetric.png'  width=450 height=300 /> | <image src='imageDocs/interactiveGraphWeek.png'  width=350 height=300 /> 
+<image src='imageDocs/interactiveGraphSleepActivityMetric.png'  width=450 height=400 /> | <image src='imageDocs/interactiveGraphWeek.png'  width=450 height=400 /> 
 
 
 <br></br>
