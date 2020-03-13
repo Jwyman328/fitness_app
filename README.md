@@ -21,13 +21,13 @@
  
  Daily Progress |  Monthly Progress     
 :-------------------------:|:-------------------------:
-<image src='imageDocs/dailyPoints.png'  width=350 height=300 /> | <image src='imageDocs/monthGraph.png'  width=350 height=300 /> 
+<image src='imageDocs/dailyPoints.png'  width=450 height=300 /> | <image src='imageDocs/monthGraph.png'  width=450 height=300 /> 
 
  <h2>Use interactive graphs to see point or activity metrics </h2>
  
  Daily Progress |  Monthly Progress     
 :-------------------------:|:-------------------------:
-<image src='imageDocs/dailyPoints.png'  width=350 height=300 /> | <image src='imageDocs/monthGraph.png'  width=350 height=300 /> 
+<image src='imageDocs/interactiveGraphSleepActivityMetric.png'  width=450 height=300 /> | <image src='imageDocs/interactiveGraphWeek.png'  width=350 height=300 /> 
 
 
 <br></br>
