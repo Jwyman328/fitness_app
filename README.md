@@ -42,7 +42,7 @@
  
  
  <br></br>
- <h2>Challenge others to compete in any category </h2>
+ <h2>Challenge others to compete aganist you in any category </h2>
  
   Create Challenge        | Challenge Results Graph   
 :-------------------------:|:-------------------------:
