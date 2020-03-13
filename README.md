@@ -34,7 +34,7 @@
  
  Set Goal | Daily Goal with red goal line |  Entire Goal results    
 :-------------------------:|:-------------------------:|:-------------------------:
-<image src='imageDocs/setGoal.png'  width=550 height=400 /> | <image src='imageDocs/challengeGraph.png'  width=550 height=400 /> 
+<image src='imageDocs/setGoal.png'  width=550 height=400 /> | <image src='imageDocs/dailyGraphWithGoal.png'  width=550 height=400 /> | <image src='imageDocs/challengeGraph.png'  width=550 height=400 /> 
 
 
 <br></br>
