@@ -36,9 +36,16 @@
 :-------------------------:|:-------------------------:
 <image src='imageDocs/setGoal.png'  width=650 height=300 /> | <image src='imageDocs/dailyGraphWithGoal.png'  width=650 height=300 /> 
 
-  Entire Goal results  | 
+  Entire Goal results  
  :-------------------------:
  <image src='imageDocs/challengeGraph.png'  width=650 height=300 /> 
+ 
+ 
+ <br></br>
+ <h2>Challenge others to compete in any category </h2>
+  Create Challenge        | Challenge Results Graph   
+:-------------------------:|:-------------------------:
+<image src='imageDocs/createChallenge.png'  width=650 height=300 /> | <image src='imageDocs/challengeAgainstGraph.png'  width=650 height=300 /> 
 
 
 <br></br>
