@@ -27,7 +27,7 @@
  
  Sleep Hour Progress over 60 days |  Total Points over 7 days    
 :-------------------------:|:-------------------------:
-<image src='imageDocs/interactiveGraphSleepActivityMetric.png'  width=450 height=400 /> | <image src='imageDocs/interactiveGraphWeek.png'  width=450 height=400 /> 
+<image src='imageDocs/interactiveGraphSleepActivityMetric.png'  width=550 height=400 /> | <image src='imageDocs/interactiveGraphWeek.png'  width=550 height=400 /> 
 
 
 <br></br>
