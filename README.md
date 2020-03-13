@@ -29,16 +29,12 @@
 :-------------------------:|:-------------------------:
 <image src='imageDocs/interactiveGraphSleepActivityMetric.png'  width=550 height=400 /> | <image src='imageDocs/interactiveGraphWeek.png'  width=550 height=400 /> 
 
-
-<br></br>
-<h2> Meditations </h2>
-<h4>Choose your meditation and meditate</h4>
-
-Choose a Meditation Course |  Choose a Meditation      |  Listen to the Meditation |  Complete the Meditation
-:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
-<image src='images/imageDocs/chooseCourse.png'  width=250 height=400 /> |  <image src='images/imageDocs/favoritedCourse.png'  width=250 height=400 /> |  <image src='images/docImages/playMeditation.png'  width=250 height=400 />  | <image src='images/docImages/completedMeditation.png'  width=250 height=400 />
-
-
+ <br></br>
+ <h2>Set personal goals and compete against your expectations </h2>
+ 
+ Set Goal | Daily Goal with red goal line |  Entire Goal results    
+:-------------------------:|:-------------------------:|:-------------------------:
+<image src='imageDocs/setGoal.png'  width=550 height=400 /> | <image src='imageDocs/challengeGraph.png'  width=550 height=400 /> 
 
 
 <br></br>
