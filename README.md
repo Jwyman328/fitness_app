@@ -32,9 +32,13 @@
  <br></br>
  <h2>Set personal goals and compete against your expectations </h2>
  
- Set Goal | Daily Goal with red goal line |  Entire Goal results    
-:-------------------------:|:-------------------------:|:-------------------------:
-<image src='imageDocs/setGoal.png'  width=550 height=400 /> | <image src='imageDocs/dailyGraphWithGoal.png'  width=550 height=400 /> | <image src='imageDocs/challengeGraph.png'  width=550 height=400 /> 
+ Set Goal | Daily Goal with red goal line    
+:-------------------------:|:-------------------------:
+<image src='imageDocs/setGoal.png'  width=650 height=300 /> | <image src='imageDocs/dailyGraphWithGoal.png'  width=650 height=300 /> 
+
+  Entire Goal results  | 
+ :-------------------------:
+ <image src='imageDocs/challengeGraph.png'  width=650 height=300 /> 
 
 
 <br></br>
